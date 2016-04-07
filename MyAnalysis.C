@@ -175,7 +175,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    h_NMuon->Fill(N_IsoMuon, EventWeight);
    
    if (N_IsoMuon > 1 && triggerIsoMu24) {
-      if (muon1->Pt()>MuonPtCut) {
+      if (muon1->Pt()>MuonPtCut && muon2->Pt()>MuonPtCut ) {
          h_Mmumu->Fill((*muon1 + *muon2).M(), EventWeight);
       }
    }
