@@ -15,8 +15,8 @@ class MyMuon: public TLorentzVector {
    public:
 
       MyMuon();
-      MyMuon(double px, double py, double pz, double e) {
-         SetPxPyPzE(px, py, pz, e);
+      MyMuon(double pt, double eta, double phi, double e) {
+         SetPtEtaPhiE(pt, eta, phi, e);
       }
       ;
       virtual ~MyMuon();

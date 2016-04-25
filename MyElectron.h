@@ -15,8 +15,8 @@ class MyElectron: public TLorentzVector {
    public:
 
       MyElectron();
-      MyElectron(double px, double py, double pz, double e) {
-         SetPxPyPzE(px, py, pz, e);
+      MyElectron(double pt, double eta, double phi, double e) {
+         SetPtEtaPhiE(pt, eta, phi, e);
       }
       ;
       virtual ~MyElectron();

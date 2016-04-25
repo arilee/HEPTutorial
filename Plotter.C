@@ -1,10 +1,3 @@
-/*
- * Plotter.C
- *
- *  Created on: 25.06.2012
- *      Author: csander
- */
-
 #include "Plotter.h"
 
 Plotter::Plotter() {
@@ -118,6 +111,7 @@ void Plotter::Plot(std::string filename) {
 				hs->Add(it->at(i));
 				l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
 				++j;
+                                std::cout << "N_histos = " << i << " bg name = " << bg_names.at(j).c_str() << " num. = " << it->at(i)->Integral() << std::endl;        
 			}
 		}
 		TCanvas *c = new TCanvas("c", "c", 800, 600);

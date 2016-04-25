@@ -7,75 +7,64 @@
 
 int main() {
    
-   float lumi = 50.;
+   float lumi = 2300.;
    
+   TString dir = "/xrootd/store/user/tjkim/ntuples/hep/V1";
+
    MyAnalysis *A = new MyAnalysis();
-   TChain* ch = new TChain("events");
-   ch->Add("files/data.root");
+   TChain* ch = new TChain("TopTree/events");
+   ch->Add(Form("%s/hep_data_json.root",dir.Data()));
    ch->Process(A);
    
-   MyAnalysis *B = new MyAnalysis();
-   TChain* ch2 = new TChain("events");
-   ch2->Add("files/ttbar.root");
+   MyAnalysis *B = new MyAnalysis(1,1,831.8,lumi,97994442);
+   TChain* ch2 = new TChain("TopTree/events");
+   ch2->Add(Form("%s/hep_TT_powheg.root",dir.Data()));
    ch2->Process(B);
    
-   MyAnalysis *C = new MyAnalysis();
-   TChain* ch3 = new TChain("events");
-   ch3->Add("files/wjets.root");
+   MyAnalysis *C = new MyAnalysis(1,1,61524,lumi,24156124);
+   TChain* ch3 = new TChain("TopTree/events");
+   ch3->Add(Form("%s/hep_WJets.root",dir.Data()));
    ch3->Process(C);
    
-   MyAnalysis *D = new MyAnalysis();
-   TChain* ch4 = new TChain("events");
-   ch4->Add("files/dy.root");
+   MyAnalysis *D = new MyAnalysis(1,1,6025.2,lumi,114613024);
+   TChain* ch4 = new TChain("TopTree/events");
+   ch4->Add(Form("%s/hep_DYJets.root",dir.Data()));
    ch4->Process(D);
-   
-   MyAnalysis *E = new MyAnalysis();
-   TChain* ch5 = new TChain("events");
-   ch5->Add("files/ww.root");
+  
+   MyAnalysis *E = new MyAnalysis(1,1,18610.0,lumi,16600229);
+   TChain* ch5 = new TChain("TopTree/events");
+   ch5->Add(Form("%s/hep_DYJets_10to50.root",dir.Data()));
    ch5->Process(E);
+ 
+   MyAnalysis *I = new MyAnalysis(1,1,136.02,lumi,3299200);
+   TChain* ch6 = new TChain("TopTree/events");
+   ch6->Add(Form("%s/hep_SingleTop_t.root",dir.Data()));
+   ch6->Process(I);
 
-   MyAnalysis *F = new MyAnalysis();
-   TChain* ch6 = new TChain("events");
-   ch6->Add("files/wz.root");
-   ch6->Process(F);
+   MyAnalysis *J = new MyAnalysis(1,1,80.95,lumi,1630900);
+   TChain* ch7 = new TChain("TopTree/events");
+   ch7->Add(Form("%s/hep_SingleTbar_t.root",dir.Data()));
+   ch7->Process(J);
 
-   MyAnalysis *G = new MyAnalysis();
-   TChain* ch7 = new TChain("events");
-   ch7->Add("files/zz.root");
-   ch7->Process(G);
+   MyAnalysis *K = new MyAnalysis(1,1,35.6,lumi,1950000);
+   TChain* ch8 = new TChain("TopTree/events");
+   ch8->Add(Form("%s/hep_SingleTop_tW.root",dir.Data()));
+   ch8->Process(K);
 
-   MyAnalysis *H = new MyAnalysis();
-   TChain* ch8 = new TChain("events");
-   ch8->Add("files/qcd.root");
-   ch8->Process(H);
-   
-   MyAnalysis *I = new MyAnalysis();
-   TChain* ch9 = new TChain("events");
-   ch9->Add("files/single_top.root");
-   ch9->Process(I);
+   Plotter P;
+   P.SetData(A->histograms, std::string("Data"));
+   P.AddBg(B->histograms, std::string("TTbar"));
+   P.AddBg(C->histograms, std::string("Wjets"));
+   P.AddBg(D->histograms, std::string("DY"));
+   P.AddBg(E->histograms, std::string("DY20to50"));
+//P.AddBg(E->histograms, std::string("WW"));
+//P.AddBg(F->histograms, std::string("WZ"));
+//P.AddBg(G->histograms, std::string("ZZ"));
+//P.AddBg(H->histograms, std::string("QCD"));
+   P.AddBg(I->histograms, std::string("single Top-t"));
+   P.AddBg(J->histograms, std::string("single Tbar-t"));
+   P.AddBg(K->histograms, std::string("single Top-tW"));
 
-	Plotter P;
-	P.SetData(A->histograms, std::string("Data"));
-	P.AddBg(B->histograms, std::string("TTbar"));
-	P.AddBg(C->histograms, std::string("Wjets"));
-	P.AddBg(D->histograms, std::string("DY"));
-	P.AddBg(E->histograms, std::string("WW"));
-	P.AddBg(F->histograms, std::string("WZ"));
-	P.AddBg(G->histograms, std::string("ZZ"));
-	P.AddBg(H->histograms, std::string("QCD"));
-	P.AddBg(I->histograms, std::string("single Top"));
-   
-	P.Plot(string("results.pdf"));
-   
-	Plotter P_MC;
-	P_MC.AddBg(B->histograms_MC, std::string("TTbar"));
-	P_MC.AddBg(C->histograms_MC, std::string("Wjets"));
-	P_MC.AddBg(D->histograms_MC, std::string("DY"));
-	P_MC.AddBg(E->histograms_MC, std::string("WW"));
-	P_MC.AddBg(F->histograms_MC, std::string("WZ"));
-	P_MC.AddBg(G->histograms_MC, std::string("ZZ"));
-	P_MC.AddBg(H->histograms_MC, std::string("QCD"));
-	P_MC.AddBg(I->histograms_MC, std::string("single Top"));
-   P_MC.Plot(string("results_MC.pdf"));
+   P.Plot(string("results.pdf"));
 
 }

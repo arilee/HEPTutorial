@@ -16,8 +16,8 @@ class MyJet: public TLorentzVector {
    public:
 
       MyJet();
-      MyJet(double px, double py, double pz, double e) {
-         SetPxPyPzE(px, py, pz, e);
+      MyJet(double pt, double eta, double phi, double e) {
+         SetPtEtaPhiE(pt, eta, phi, e);
       }
       ;
       virtual ~MyJet();
