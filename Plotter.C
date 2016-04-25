@@ -59,7 +59,7 @@ void Plotter::Plot(std::string filename) {
 	//gROOT->ForceStyle();
    
 	bool DrawLog = true;
-   
+
 	for (int i = 0; i < N_histos; ++i) {
       
 		THStack *hs;
@@ -110,8 +110,7 @@ void Plotter::Plot(std::string filename) {
 				}
 				hs->Add(it->at(i));
 				l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
-				++j;
-                                std::cout << "N_histos = " << i << " bg name = " << bg_names.at(j).c_str() << " num. = " << it->at(i)->Integral() << std::endl;        
+                                ++j;
 			}
 		}
 		TCanvas *c = new TCanvas("c", "c", 800, 600);
