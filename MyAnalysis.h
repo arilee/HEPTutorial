@@ -20,6 +20,7 @@
 #include "MyMuon.h"
 #include "MyElectron.h"
 #include "MyPhoton.h"
+#include <iostream>
 
 using namespace std;
 
@@ -75,8 +76,9 @@ public:
    Float_t Photon_Phi[5]; //[NPhoton]
    Float_t Photon_E[5]; //[NPhoton]
    Float_t Photon_Iso[5]; //[NPhoton]
-   Float_t MET_Px;
-   Float_t MET_Py;
+   Double_t MET;
+   Double_t MET_Px;
+   Double_t MET_Py;
 
    Float_t WMuon_MT[5];
    Float_t WMuon_Phi[5];
@@ -104,7 +106,9 @@ public:
    Float_t MCneutrino_pz;
    Int_t NPrimaryVertices;
    //Bool_t triggerIsoMu24;
+   Int_t NVertex;
    Float_t PUWeight;
+   Float_t GenWeight;
    
    // List of branches
    TBranch *b_NBJet; //!
@@ -152,6 +156,7 @@ public:
    TBranch *b_Photon_Phi; //!
    TBranch *b_Photon_E; //!
    TBranch *b_Photon_Iso; //!
+   TBranch *b_MET; //!
    TBranch *b_MET_Px; //!
    TBranch *b_MET_Py; //!
 
@@ -181,7 +186,9 @@ public:
    TBranch *b_MCneutrino_pz; //!
    TBranch *b_NPrimaryVertices; //!
    //TBranch *b_triggerIsoMu24; //!
+   TBranch *b_NVertex; //!
    TBranch *b_PUWeight; //!
+   TBranch *b_GenWeight; //!
    
    MyAnalysis(float sf = 1., float wf = 1, float Xsection = 1.0 , float lumi = 1.0, float num = 1.0, TTree * /*tree*/= 0) :
    fChain(0) {
@@ -189,6 +196,7 @@ public:
       norm_scale = lumi/(num/Xsection);
       SF_b = sf;
    }
+
    virtual ~MyAnalysis() {
    }
    virtual Int_t Version() const {
@@ -218,7 +226,8 @@ public:
    virtual void Terminate();
    
    void BuildEvent();
-   
+  
+   float EventWeight; 
    int TotalEvents;
    vector<MyJet> Jets;
    vector<MyMuon> Muons;
@@ -226,19 +235,21 @@ public:
    vector<MyPhoton> Photons;
    
    TLorentzVector hadB, lepB, hadWq, hadWqb, lepWl, lepWn;
-   TLorentzVector met;
+   TLorentzVector mymet;
    
    float weight_factor;
    float norm_scale;
    float SF_b;
-   
-   TH1F *h_Mmumu;
-   TH1F *h_NMuon;
-   TH1F *h_WMuon_MT;
-   TH1F *h_WMuon_Phi;
-   TH1F *h_NJet; 
-   TH1F *h_NBJet; 
-   TH1F *h_WMuon_MT_Final;
+  
+   TH1F *h_Mmumu[4];
+   TH1F *h_NMuon[4];
+   TH1F *h_MuonIso[4];
+   TH1F *h_NVertex[4];
+   TH1F *h_WMuon_MT[4];
+   TH1F *h_WMuon_Phi[4];
+   TH1F *h_NJet[4]; 
+   TH1F *h_NBJet[4]; 
+   TH1F *h_MET[4]; 
  
    vector<TH1F*> histograms;
    vector<TH1F*> histograms_MC;
@@ -303,6 +314,7 @@ void MyAnalysis::Init(TTree *tree)
    
 
 
+   fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_Px", &MET_Px, &b_MET_Px);
    fChain->SetBranchAddress("MET_Py", &MET_Py, &b_MET_Py);
 
@@ -332,9 +344,13 @@ void MyAnalysis::Init(TTree *tree)
  //  fChain->SetBranchAddress("MCneutrino_pz", &MCneutrino_pz, &b_MCneutrino_pz);
  //  fChain->SetBranchAddress("NPrimaryVertices", &NPrimaryVertices, &b_NPrimaryVertices);
  //  fChain->SetBranchAddress("triggerIsoMu24", &triggerIsoMu24, &b_triggerIsoMu24);
+   fChain->SetBranchAddress("NVertex", &NVertex, &b_NVertex);
    fChain->SetBranchAddress("PUWeight", &PUWeight, &b_PUWeight);
+   fChain->SetBranchAddress("GenWeight", &GenWeight, &b_GenWeight);
    
    TotalEvents = 0;
+   EventWeight = 1.0;
+
 }
 
 Bool_t MyAnalysis::Notify()
