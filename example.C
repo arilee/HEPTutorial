@@ -54,6 +54,29 @@ int main() {
    ch9->Add("files/single_top.root");
    ch9->Process(I);
 
+    int data_evt = A->histograms[0]->Integral();
+    int ttbar_evt = B->histograms[0]->Integral();
+    int Z_evt = D->histograms[0]->Integral();
+	cout << "Step 0 before opposite sign" << endl;
+	cout << "ttbar = " << ttbar_evt << endl;
+	cout << "Z = " << Z_evt << endl;
+	int total_MC = ttbar_evt + Z_evt;
+	cout << "total MC = " << total_MC << endl;
+	cout << "Data= " << data_evt << endl;
+	 
+     data_evt = A->histograms[1]->Integral();
+     ttbar_evt = B->histograms[1]->Integral();
+     Z_evt = D->histograms[1]->Integral();
+     cout << "Step 1 after opposite sign" << endl;
+     cout << "ttbar = " << ttbar_evt << endl;
+     cout << "Z = " << Z_evt << endl;
+     total_MC = ttbar_evt + Z_evt;
+     cout << "total MC = " << total_MC << endl;
+     cout << "Data= " << data_evt << endl;
+
+
+
+
 	Plotter P;
 	P.SetData(A->histograms, std::string("Data"));
 	P.AddBg(B->histograms, std::string("TTbar"));

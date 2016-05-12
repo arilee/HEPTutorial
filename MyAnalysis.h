@@ -185,6 +185,7 @@ public:
    float SF_b;
    
    TH1F *h_Mmumu;
+   TH1F *h_Mmumu_opp;
    TH1F *h_NMuon;
    
    vector<TH1F*> histograms;

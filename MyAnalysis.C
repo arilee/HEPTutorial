@@ -96,7 +96,14 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    h_Mmumu->Sumw2();
    histograms.push_back(h_Mmumu);
    histograms_MC.push_back(h_Mmumu);
-   
+  
+   h_Mmumu_opp = new TH1F("Mmumu_opp", "Invariant di-muon mass with opposite sign", 60, 60, 120);
+   h_Mmumu_opp->SetXTitle("m_{#mu#mu}");
+   h_Mmumu_opp->Sumw2();
+   histograms.push_back(h_Mmumu_opp);
+   histograms_MC.push_back(h_Mmumu_opp);
+
+
    h_NMuon = new TH1F("NMuon", "Number of muons", 7, 0, 7);
    h_NMuon->SetXTitle("No. Muons");
    h_NMuon->Sumw2();
@@ -177,6 +184,10 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    if (N_IsoMuon > 1 && triggerIsoMu24) {
       if (muon1->Pt()>MuonPtCut && muon2->Pt()>MuonPtCut ) {
          h_Mmumu->Fill((*muon1 + *muon2).M(), EventWeight);
+         bool pass_opposite_sign = muon1->GetCharge()*muon2->GetCharge() < 0;  
+         if(pass_opposite_sign){   	     
+           h_Mmumu_opp->Fill((*muon1 + *muon2).M(), EventWeight);
+		 }
       }
    }
    //////////////////////////////
@@ -195,5 +206,8 @@ void MyAnalysis::Terminate() {
    // The Terminate() function is the last function to be called during
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
+   //cout << "Terminate" << endl;
+   //int num_events = h_NMuon->Integral(3,7);
+   //cout << "number of events which have more than 1 isolated muon = " << num_events << endl;
    
 }
