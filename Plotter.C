@@ -18,8 +18,8 @@ Plotter::~Plotter() {
 
 void Plotter::Plot(std::string filename) {
    
-	gROOT->Reset();
-	//gROOT->SetStyle("Plain");
+	//gROOT->Reset();
+	gROOT->SetStyle("Plain");
    
 	TStyle *MyStyle = new TStyle("MyStyle","My Root Styles");
 	MyStyle->SetStatColor(0);
