@@ -7,11 +7,15 @@
 
 int main() {
    
-   float lumi = 1000.;
+   float lumi = 5000.;
    
-   TString dir = "/xrootd/store/user/tjkim/ntuples/hep2016/V1";
+   TString dir = "/xrootd/store/user/tjkim/ntuples/hep2016/V2";
 
-   int nevt = 1000;
+   int nevt = -1;
+
+   bool run = false;
+
+   if( run ) {
 
    MyAnalysis *A = new MyAnalysis();
    TChain* ch = new TChain("TopTree/events");
@@ -54,8 +58,9 @@ int main() {
    ch8->Add(Form("%s/hep_SingleTop_tW.root",dir.Data()),nevt);
    ch8->Process(K,"SingleTop_tW");
 */
+   }
 
-   //Plotter P;
+   Plotter P;
    //cout << "plot declare " << endl;
 //   for (int i=0; i < D->histograms.size() ;i++) {
      //merge for DY
@@ -65,6 +70,10 @@ int main() {
 //     I->histograms[i]->Add(K->histograms[i]);
 //   } 
 
+   P.SetData("hist_data.root", std::string("Data"));
+   P.AddBg("hist_TT_powheg.root", std::string("TTbar"));
+   P.AddBg("hist_WJets.root", std::string("Wjets"));
+   P.AddBg("hist_DYJets.root", std::string("DY"));
  
    //P.SetData(A->histograms, std::string("Data"));
    //P.AddBg(B->histograms, std::string("TTbar"));
@@ -80,7 +89,7 @@ int main() {
    //cout << "pdf" <<endl;
   
    //P.Plot(string("results.pdf"));
-   //P.Plot("results.pdf");
+   P.Plot("results.pdf");
 
    //cout << "plot" << endl;
 

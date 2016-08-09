@@ -13,12 +13,14 @@
 #include <iostream>
 
 #include <TH1F.h>
+#include <TFile.h>
 #include <TStyle.h>
 #include <THStack.h>
 #include <TCanvas.h>
 #include <TLegend.h>
 #include <TROOT.h>
-
+#include <TKey.h>
+#include <TClass.h>
 
 class Plotter {
 public:
@@ -29,6 +31,23 @@ public:
 		data_names.push_back(n);
 		N_histos = v.size();
 	}
+        void SetData(TString name, std::string n){
+               TFile * f = new TFile(Form("%s",name.Data()));
+               std::vector<TH1F*> v;
+               TIter next(f->GetListOfKeys()); 
+               TKey *key;
+               while (key = (TKey*)next() ){
+                 TClass *cl = gROOT->GetClass(key->GetClassName());
+                 if ( cl->InheritsFrom("TH1F")) {
+                   TH1F * h = (TH1F*) key->ReadObj(); 
+                   v.push_back(h);
+                 }
+               }
+               data.push_back(v);
+               data_names.push_back(n);
+               N_histos = v.size();
+        }
+
 	void ClearData(){
 		data.clear();
 		data_names.clear();
@@ -38,6 +57,23 @@ public:
 		bg_names.push_back(n);
 		N_histos = v.size();
 	}
+        void AddBg(TString name, std::string n){
+                TFile * f = new TFile(Form("%s",name.Data()));
+                std::vector<TH1F*> v;
+                TIter next(f->GetListOfKeys());             
+                TKey *key;
+                while (key = (TKey*)next() ){
+                  TClass *cl = gROOT->GetClass(key->GetClassName());
+                  if ( cl->InheritsFrom("TH1F")) {
+                    TH1F * h = (TH1F*) key->ReadObj();
+                    v.push_back(h);
+                  }
+                }
+                bg.push_back(v);
+                bg_names.push_back(n);
+                N_histos = v.size();
+        }
+
 	void ClearBg(){
 		bg.clear();
 		bg_names.clear();
@@ -47,6 +83,24 @@ public:
 		signal_names.push_back(n);
 		N_histos = v.size();
 	}
+        void AddSig(TString name, std::string n){
+                TFile * f = new TFile(Form("%s",name.Data()));
+                std::vector<TH1F*> v;
+                TIter next(f->GetListOfKeys());             
+                TKey *key;
+                while (key = (TKey*)next() ){
+                  TClass *cl = gROOT->GetClass(key->GetClassName());
+                  if ( cl->InheritsFrom("TH1F")) {
+                    TH1F * h = (TH1F*) key->ReadObj();
+                    v.push_back(h);
+                  }
+                }
+
+                signal.push_back(v);
+                signal_names.push_back(n);
+                N_histos = v.size();
+        }
+
 	void ClearSig(){
 		signal.clear();
 		signal_names.clear();

@@ -84,6 +84,7 @@ void MyAnalysis::Begin(TTree * /*tree*/) {
    // The tree argument is deprecated (on PROOF 0 is passed).
    
    TString option = GetOption();
+   cout << "Process " << option << endl;
 }
 
 void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
@@ -176,7 +177,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    
    GetEntry(entry);
 
-   if (TotalEvents % 100000 == 0)
+   if (TotalEvents % 10000 == 0)
       cout << "Next event -----> " << TotalEvents << endl;
    
    BuildEvent();
