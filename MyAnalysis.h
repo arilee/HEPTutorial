@@ -190,10 +190,11 @@ public:
    TBranch *b_PUWeight; //!
    TBranch *b_GenWeight; //!
    
-   MyAnalysis(float sf = 1., float wf = 1, float Xsection = 1.0 , float lumi = 1.0, float num = 1.0, TTree * /*tree*/= 0) :
+   MyAnalysis(float sf = 1., float wf = 1, float Xsection = 1.0 , float lumi = 1.0, TTree * /*tree*/= 0) :
    fChain(0) {
       weight_factor = wf;
-      norm_scale = lumi/(num/Xsection);
+      Lumi = lumi;
+      Sigma = Xsection; 
       SF_b = sf;
    }
 
@@ -229,6 +230,10 @@ public:
   
    float EventWeight; 
    int TotalEvents;
+   int nEvents; 
+   float Lumi;
+   float Sigma; 
+
    vector<MyJet> Jets;
    vector<MyMuon> Muons;
    vector<MyElectron> Electrons;
@@ -347,7 +352,13 @@ void MyAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("NVertex", &NVertex, &b_NVertex);
    fChain->SetBranchAddress("PUWeight", &PUWeight, &b_PUWeight);
    fChain->SetBranchAddress("GenWeight", &GenWeight, &b_GenWeight);
-   
+  
+   TFile * f = ((TChain *) fChain)->GetFile();
+   //const char * name = ((TChain *) fChain)->GetFile()->GetName();
+   //cout << "name = " << name << endl;
+   TH1F * hevt = (TH1F*) f->Get("TopTree/EventSummary");
+   nEvents = hevt->GetBinContent(2);
+ 
    TotalEvents = 0;
    EventWeight = 1.0;
 

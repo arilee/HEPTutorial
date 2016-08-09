@@ -70,9 +70,12 @@ void MyAnalysis::BuildEvent() {
    //lepWl.SetXYZM(MClepton_px, MClepton_py, MClepton_pz, 0.0);
    //lepWn.SetXYZM(MCneutrino_px, MCneutrino_py, MCneutrino_pz, 0.0);
    mymet.SetXYZM(MET_Px, MET_Py, 0., 0.);
-   
-   EventWeight = PUWeight*GenWeight*weight_factor*norm_scale;
+  
+   if( Lumi == 1 ){ norm_scale = 1.0; }
+   else{ norm_scale = Lumi/(nEvents/Sigma);}
 
+   EventWeight = PUWeight*GenWeight*weight_factor*norm_scale;
+   
 }
 
 void MyAnalysis::Begin(TTree * /*tree*/) {
@@ -81,7 +84,6 @@ void MyAnalysis::Begin(TTree * /*tree*/) {
    // The tree argument is deprecated (on PROOF 0 is passed).
    
    TString option = GetOption();
-   
 }
 
 void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
@@ -292,6 +294,15 @@ void MyAnalysis::SlaveTerminate() {
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
    // on each slave server.
+   TString option = GetOption();
+
+   TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
+   for(int i=0; i < histograms.size(); i++){
+     TH1F * tmp = (TH1F *) histograms[i];
+     tmp->Write();
+   }
+   out->Write();
+   out->Close();
    
 }
 
