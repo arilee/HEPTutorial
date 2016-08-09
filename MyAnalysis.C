@@ -94,55 +94,55 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    TString option = GetOption();
 
    for(int i=0; i < 4; i++){ 
-     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i",i), "Number of vertex", 40 , 0, 40);
+     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 40 , 0, 40);
      h_NVertex[i]->SetXTitle("No. Vertexs");
      h_NVertex[i]->Sumw2();
      histograms.push_back(h_NVertex[i]);
      histograms_MC.push_back(h_NVertex[i]);
     
-     h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i",i), "Invariant di-muon mass", 100, 40, 140);
+     h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i_%s",i,option.Data()), "Invariant di-muon mass", 100, 40, 140);
      h_Mmumu[i]->SetXTitle("m_{#mu#mu}");
      h_Mmumu[i]->Sumw2();
      histograms.push_back(h_Mmumu[i]);
      histograms_MC.push_back(h_Mmumu[i]);
    
-     h_NMuon[i] = new TH1F(Form("h_NMuon_S%i",i), "Number of muons", 7, 0, 7);
+     h_NMuon[i] = new TH1F(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
      h_NMuon[i]->SetXTitle("No. Muons");
      h_NMuon[i]->Sumw2();
      histograms.push_back(h_NMuon[i]);
      histograms_MC.push_back(h_NMuon[i]);
  
-     h_MuonIso[i] = new TH1F(Form("h_MuonIso_S%i",i), "Relative Isolation", 80, 0, 0.4);
+     h_MuonIso[i] = new TH1F(Form("h_MuonIso_S%i_%s",i,option.Data()), "Relative Isolation", 80, 0, 0.4);
      h_MuonIso[i]->SetXTitle("Relative Isolation (GeV)");
      h_MuonIso[i]->Sumw2();
      histograms.push_back(h_MuonIso[i]);
      histograms_MC.push_back(h_MuonIso[i]);
  
-     h_WMuon_MT[i] = new TH1F(Form("h_WMuon_MT_S%i",i), "Transverse mass", 60, 0, 120);
+     h_WMuon_MT[i] = new TH1F(Form("h_WMuon_MT_S%i_%s",i,option.Data()), "Transverse mass", 60, 0, 120);
      h_WMuon_MT[i]->SetXTitle("MT(Gev)");
      h_WMuon_MT[i]->Sumw2();
      histograms.push_back(h_WMuon_MT[i]);
      histograms_MC.push_back(h_WMuon_MT[i]);
 
-     h_WMuon_Phi[i] = new TH1F(Form("h_WMuon_Phi_S%i",i), "DR between muon and MET", 70, 0, 3.5);
+     h_WMuon_Phi[i] = new TH1F(Form("h_WMuon_Phi_S%i_%s",i,option.Data()), "DR between muon and MET", 70, 0, 3.5);
      h_WMuon_Phi[i]->SetXTitle("DR between muon and MET");
      h_WMuon_Phi[i]->Sumw2();
      histograms.push_back(h_WMuon_Phi[i]);
      histograms_MC.push_back(h_WMuon_Phi[i]);
 
-     h_NJet[i] = new TH1F(Form("h_NJet_S%i",i), "Number of jets", 14, 0, 14);
+     h_NJet[i] = new TH1F(Form("h_NJet_S%i_%s",i,option.Data()), "Number of jets", 14, 0, 14);
      h_NJet[i]->SetXTitle("No. Jets");
      h_NJet[i]->Sumw2();
      histograms.push_back(h_NJet[i]);
      histograms_MC.push_back(h_NJet[i]);
 
-     h_NBJet[i] = new TH1F(Form("h_NBJet_S%i",i), "Number of b tagged jets", 5, 0, 5);
+     h_NBJet[i] = new TH1F(Form("h_NBJet_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
      h_NBJet[i]->SetXTitle("No. b Jets");
      h_NBJet[i]->Sumw2();
      histograms.push_back(h_NBJet[i]);
      histograms_MC.push_back(h_NBJet[i]);
 
-     h_MET[i] = new TH1F(Form("h_MET_S%i",i), "MET", 100, 0, 100);
+     h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 100, 0, 100);
      h_MET[i]->SetXTitle("MET");
      h_MET[i]->Sumw2();
      histograms.push_back(h_MET[i]);
