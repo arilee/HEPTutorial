@@ -47,28 +47,28 @@ public:
    Float_t Muon_Phi[5]; //[NMuon]
    Float_t Muon_E[5]; //[NMuon]
    Int_t Muon_Charge[5]; //[NMuon]
-   Float_t Muon_Iso[5]; //[NMuon]
+   Float_t Muon_Iso03[5]; //[NMuon]
    Int_t NLooseMuon;
    Float_t LooseMuon_Pt[5]; //[NLooseMuon]
    Float_t LooseMuon_Eta[5]; //[NLooseMuon]
    Float_t LooseMuon_Phi[5]; //[NLooseMuon]
    Float_t LooseMuon_E[5]; //[NLooseMuon]
    Int_t LooseMuon_Charge[5]; //[NLooseMuon]
-   Float_t LooseMuon_Iso[5]; //[NLooseMuon]
+   Float_t LooseMuon_Iso03[5]; //[NLooseMuon]
    Int_t NElectron;
    Float_t Electron_Pt[5]; //[NElectron]
    Float_t Electron_Eta[5]; //[NElectron]
    Float_t Electron_Phi[5]; //[NElectron]
    Float_t Electron_E[5]; //[NElectron]
    Int_t Electron_Charge[5]; //[NElectron]
-   Float_t Electron_Iso[5]; //[NElectron]
+   Float_t Electron_Iso03[5]; //[NElectron]
    Int_t NLooseElectron;
    Float_t LooseElectron_Pt[5]; //[NLooseElectron]
    Float_t LooseElectron_Eta[5]; //[NLooseElectron]
    Float_t LooseElectron_Phi[5]; //[NLooseElectron]
    Float_t LooseElectron_E[5]; //[NLooseElectron]
    Int_t LooseElectron_Charge[5]; //[NLooseElectron]
-   Float_t LooseElectron_Iso[5]; //[NLooseElectron]
+   Float_t LooseElectron_Iso03[5]; //[NLooseElectron]
  
    Int_t NPhoton;
    Float_t Photon_Pt[5]; //[NPhoton]
@@ -125,14 +125,14 @@ public:
    TBranch *b_Muon_Phi; //!
    TBranch *b_Muon_E; //!
    TBranch *b_Muon_Charge; //!
-   TBranch *b_Muon_Iso; //!
+   TBranch *b_Muon_Iso03; //!
    TBranch *b_NLooseMuon; //!
    TBranch *b_LooseMuon_Pt; //!
    TBranch *b_LooseMuon_Eta; //!
    TBranch *b_LooseMuon_Phi; //!
    TBranch *b_LooseMuon_E; //!
    TBranch *b_LooseMuon_Charge; //!
-   TBranch *b_LooseMuon_Iso; //!
+   TBranch *b_LooseMuon_Iso03; //!
 
    TBranch *b_NElectron; //!
    TBranch *b_Electron_Pt; //!
@@ -140,14 +140,14 @@ public:
    TBranch *b_Electron_Phi; //!
    TBranch *b_Electron_E; //!
    TBranch *b_Electron_Charge; //!
-   TBranch *b_Electron_Iso; //!
+   TBranch *b_Electron_Iso03; //!
    TBranch *b_NLooseElectron; //!
    TBranch *b_LooseElectron_Pt; //!
    TBranch *b_LooseElectron_Eta; //!
    TBranch *b_LooseElectron_Phi; //!
    TBranch *b_LooseElectron_E; //!
    TBranch *b_LooseElectron_Charge; //!
-   TBranch *b_LooseElectron_Iso; //!
+   TBranch *b_LooseElectron_Iso03; //!
 
 
    TBranch *b_NPhoton; //!
@@ -288,14 +288,14 @@ void MyAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("Muon_Phi", Muon_Phi, &b_Muon_Phi);
    fChain->SetBranchAddress("Muon_E", Muon_E, &b_Muon_E);
    fChain->SetBranchAddress("Muon_Charge", Muon_Charge, &b_Muon_Charge);
-   fChain->SetBranchAddress("Muon_Iso", Muon_Iso, &b_Muon_Iso);
+   fChain->SetBranchAddress("Muon_Iso03", Muon_Iso03, &b_Muon_Iso03);
    fChain->SetBranchAddress("NLooseMuon", &NLooseMuon, &b_NLooseMuon);
    fChain->SetBranchAddress("LooseMuon_Pt", LooseMuon_Pt, &b_LooseMuon_Pt);
    fChain->SetBranchAddress("LooseMuon_Eta", LooseMuon_Eta, &b_LooseMuon_Eta);
    fChain->SetBranchAddress("LooseMuon_Phi", LooseMuon_Phi, &b_LooseMuon_Phi);
    fChain->SetBranchAddress("LooseMuon_E", LooseMuon_E, &b_LooseMuon_E);
    fChain->SetBranchAddress("LooseMuon_Charge", LooseMuon_Charge, &b_LooseMuon_Charge);
-   fChain->SetBranchAddress("LooseMuon_Iso", LooseMuon_Iso, &b_LooseMuon_Iso);
+   fChain->SetBranchAddress("LooseMuon_Iso03", LooseMuon_Iso03, &b_LooseMuon_Iso03);
 
    fChain->SetBranchAddress("NElectron", &NElectron, &b_NElectron);
    fChain->SetBranchAddress("Electron_Pt", Electron_Pt, &b_Electron_Pt);
@@ -303,14 +303,14 @@ void MyAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("Electron_Phi", Electron_Phi, &b_Electron_Phi);
    fChain->SetBranchAddress("Electron_E", Electron_E, &b_Electron_E);
    fChain->SetBranchAddress("Electron_Charge", Electron_Charge, &b_Electron_Charge);
-   fChain->SetBranchAddress("Electron_Iso", Electron_Iso, &b_Electron_Iso);
+   fChain->SetBranchAddress("Electron_Iso03", Electron_Iso03, &b_Electron_Iso03);
    fChain->SetBranchAddress("NLooseElectron", &NLooseElectron, &b_NLooseElectron);
    fChain->SetBranchAddress("LooseElectron_Pt", LooseElectron_Pt, &b_LooseElectron_Pt);
    fChain->SetBranchAddress("LooseElectron_Eta", LooseElectron_Eta, &b_LooseElectron_Eta);
    fChain->SetBranchAddress("LooseElectron_Phi", LooseElectron_Phi, &b_LooseElectron_Phi);
    fChain->SetBranchAddress("LooseElectron_E", LooseElectron_E, &b_LooseElectron_E);
    fChain->SetBranchAddress("LooseElectron_Charge", LooseElectron_Charge, &b_LooseElectron_Charge);
-   fChain->SetBranchAddress("LooseElectron_Iso", LooseElectron_Iso, &b_LooseElectron_Iso);
+   fChain->SetBranchAddress("LooseElectron_Iso03", LooseElectron_Iso03, &b_LooseElectron_Iso03);
    
 
 

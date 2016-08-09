@@ -35,7 +35,7 @@ void MyAnalysis::BuildEvent() {
    Muons.clear();
    for (int i = 0; i < NMuon; ++i) {
       MyMuon muon(Muon_Pt[i], Muon_Eta[i], Muon_Phi[i], Muon_E[i]);
-      muon.SetIsolation(Muon_Iso[i]);
+      muon.SetIsolation(Muon_Iso03[i]);
       muon.SetCharge(Muon_Charge[i]);
       Muons.push_back(muon);
    }
@@ -43,7 +43,7 @@ void MyAnalysis::BuildEvent() {
    Electrons.clear();
    for (int i = 0; i < NElectron; ++i) {
       MyElectron electron(Electron_Pt[i], Electron_Eta[i], Electron_Phi[i], Electron_E[i]);
-      electron.SetIsolation(Electron_Iso[i]);
+      electron.SetIsolation(Electron_Iso03[i]);
       electron.SetCharge(Electron_Charge[i]);
       Electrons.push_back(electron);
    }
@@ -186,30 +186,6 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    double ElectronEtaCut = 30.;
    double ElectronRelIsoCut = 0.12;
    
-   //   cout << "Jets: " << endl;
-   //   for (vector<MyJet>::iterator it = Jets.begin(); it != Jets.end(); ++it) {
-   //      cout << "pt, eta, phi, btag, id: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", " << it->IsBTagged() << ", " << it->GetJetID() //      << endl;
-   //   }
-   //   cout << "Muons: " << endl;
-   //   for (vector<MyMuon>::iterator it = Muons.begin(); it != Muons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso, charge: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", "
-   //      << it->GetIsolation() << ", " << it->GetCharge() << endl;
-   //   }
-   //   cout << "Electrons: " << endl;
-   //   for (vector<MyElectron>::iterator it = Electrons.begin(); it != Electrons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso, charge: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", "
-   //      << it->GetIsolation() << ", " << it->GetCharge() << endl;
-   //   }
-   //   cout << "Photons: " << endl;
-   //   for (vector<MyPhoton>::iterator it = Photons.begin(); it != Photons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", " << it->GetIsolation()
-   //      << endl;
-   //   }
-   
-   
-   //////////////////////////////
-   // Exercise 1: Invariant Di-Muon mass
-    
    int N_IsoMuon = 0;
 
    int sel_mu = 0;
@@ -218,7 +194,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
 
    MyMuon *muon1, *muon2;
    for (vector<MyMuon>::iterator jt = Muons.begin(); jt != Muons.end(); ++jt) {
-     if( Muon_Iso[imu] < MuonRelIsoCut){
+     if( Muon_Iso03[imu] < MuonRelIsoCut){
        N_IsoMuon++;
        if( N_IsoMuon == 1 ) {
          muon1 = &(*jt); 
@@ -232,7 +208,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    int N_IsoElectron = 0;
    
    for (int i = 0; i < NElectron; ++i) {
-     if( Electron_Iso[i] < ElectronRelIsoCut){
+     if( Electron_Iso03[i] < ElectronRelIsoCut){
        N_IsoElectron++;
      }
    }
@@ -240,7 +216,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    int N_VetoMuon = 0;
    
    for (int i = 0; i < NLooseMuon; ++i) {
-     if( LooseMuon_Iso[i] < 0.25){
+     if( LooseMuon_Iso03[i] < 0.25){
        N_VetoMuon++;
      }
    }
@@ -248,7 +224,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    int N_VetoElectron = 0;
 
    for (int i = 0; i < NLooseElectron; ++i) {
-     if( LooseElectron_Iso[i] < 0.25){
+     if( LooseElectron_Iso03[i] < 0.25){
        N_VetoElectron++;
      }
    }
@@ -257,7 +233,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    //////////////////////////////
    //step 0 
    if( NMuon > 0 ){
-     h_MuonIso[0]->Fill(Muon_Iso[0], EventWeight);
+     h_MuonIso[0]->Fill(Muon_Iso03[0], EventWeight);
      h_NMuon[0]->Fill(N_IsoMuon, EventWeight);
      h_NVertex[0]->Fill(NVertex, EventWeight);
      h_WMuon_MT[0]->Fill( WMuon_MT[sel_mu], EventWeight);
@@ -270,7 +246,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    if( debug ) cout << "filling at step1..." << endl;
    if(N_IsoMuon == 1 && N_VetoElectron == 0 ){ //step 1
   
-     h_MuonIso[1]->Fill(Muon_Iso[sel_mu], EventWeight); 
+     h_MuonIso[1]->Fill(Muon_Iso03[sel_mu], EventWeight); 
      h_NMuon[1]->Fill(N_IsoMuon, EventWeight);
      h_NVertex[1]->Fill(NVertex, EventWeight);
      h_WMuon_MT[1]->Fill( WMuon_MT[sel_mu], EventWeight);
@@ -283,7 +259,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
 
      if( debug ) cout << "filling at step2..." << endl;
      if( NJet > 3){ //step 2
-       h_MuonIso[2]->Fill(Muon_Iso[sel_mu], EventWeight); 
+       h_MuonIso[2]->Fill(Muon_Iso03[sel_mu], EventWeight); 
        h_NMuon[2]->Fill(N_IsoMuon, EventWeight);
        h_NVertex[2]->Fill(NVertex, EventWeight);
        h_WMuon_MT[2]->Fill( WMuon_MT[sel_mu], EventWeight);
@@ -295,7 +271,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
        if( debug ) cout << "filling at step3..." << endl;
 
        if( NBJet > 1 ){ //step 3
-         h_MuonIso[3]->Fill(Muon_Iso[sel_mu], EventWeight); 
+         h_MuonIso[3]->Fill(Muon_Iso03[sel_mu], EventWeight); 
          h_NMuon[3]->Fill(N_IsoMuon, EventWeight);
          h_NVertex[3]->Fill(NVertex, EventWeight);
          h_WMuon_MT[3]->Fill( WMuon_MT[sel_mu], EventWeight);

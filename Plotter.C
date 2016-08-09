@@ -12,7 +12,7 @@ Plotter::~Plotter() {
 void Plotter::Plot(std::string filename) {
    
 	gROOT->Reset();
-	//gROOT->SetStyle("Plain");
+	gROOT->SetStyle("Plain");
    
 	TStyle *MyStyle = new TStyle("MyStyle","My Root Styles");
 	MyStyle->SetStatColor(0);
@@ -56,7 +56,7 @@ void Plotter::Plot(std::string filename) {
 	MyStyle->SetTitleSize(0.05, "z");
 	gROOT->SetStyle("MyStyle");
    
-	//gROOT->ForceStyle();
+	gROOT->ForceStyle();
    
 	bool DrawLog = true;
 
