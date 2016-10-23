@@ -102,7 +102,20 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    h_NMuon->Sumw2();
    histograms.push_back(h_NMuon);
    histograms_MC.push_back(h_NMuon);
-   
+
+   // Added two more histograms (Taejeong)   
+   h_NJet = new TH1F("NJet", "Number of jets", 10, 0, 10);
+   h_NJet->SetXTitle("No. Jets");
+   h_NJet->Sumw2();
+   histograms.push_back(h_NJet);
+   histograms_MC.push_back(h_NJet);
+
+   h_NBJet = new TH1F("NBJet", "Number of b jets", 5, 0, 5);
+   h_NBJet->SetXTitle("No. b Jets");
+   h_NBJet->Sumw2();
+   histograms.push_back(h_NBJet);
+   histograms_MC.push_back(h_NBJet);
+ 
 }
 
 Bool_t MyAnalysis::Process(Long64_t entry) {
@@ -173,11 +186,26 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    }
    
    h_NMuon->Fill(N_IsoMuon, EventWeight);
-   
+
    if (N_IsoMuon > 1 && triggerIsoMu24) {
-      if (muon1->Pt()>MuonPtCut && muon2->Pt()>MuonPtCut ) {
-         h_Mmumu->Fill((*muon1 + *muon2).M(), EventWeight);
-      }
+     if (muon1->Pt()>MuonPtCut && muon2->Pt()>MuonPtCut ) {
+       h_Mmumu->Fill((*muon1 + *muon2).M(), EventWeight);
+     }
+   }
+
+   if( N_IsoMuon == 1){
+  
+     int N_Jets = 0; 
+     int N_BJets = 0; 
+     for (vector<MyJet>::iterator jt = Jets.begin(); jt != Jets.end(); ++jt) {
+       ++N_Jets;
+       MyJet *jet = &(*jt); 
+       if( jet->IsBTagged() ) ++N_BJets;
+     }
+
+     h_NJet->Fill( N_Jets, EventWeight);
+     h_NBJet->Fill( N_BJets, EventWeight);
+
    }
    //////////////////////////////
    
@@ -188,7 +216,18 @@ void MyAnalysis::SlaveTerminate() {
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
    // on each slave server.
-   
+
+   // create histogram root files (Taejeong)
+   TString option = GetOption();
+
+   TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
+   for(int i=0; i < histograms.size(); i++){
+     TH1F * tmp = (TH1F *) histograms[i];
+     tmp->Write();
+   }
+   out->Write();
+   out->Close();  
+ 
 }
 
 void MyAnalysis::Terminate() {
