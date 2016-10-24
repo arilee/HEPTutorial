@@ -186,8 +186,10 @@ public:
    
    TH1F *h_Mmumu;
    TH1F *h_NMuon;
-   TH1F *h_NJet;
-   TH1F *h_NBJet;
+   TH1F *h_NJet_S1;
+   TH1F *h_NBJet_S1;
+   TH1F *h_NJet_S2;
+   TH1F *h_NBJet_S2;
    
    vector<TH1F*> histograms;
    vector<TH1F*> histograms_MC;

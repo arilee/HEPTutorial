@@ -104,17 +104,30 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    histograms_MC.push_back(h_NMuon);
 
    // Added two more histograms (Taejeong)   
-   h_NJet = new TH1F("NJet", "Number of jets", 10, 0, 10);
-   h_NJet->SetXTitle("No. Jets");
-   h_NJet->Sumw2();
-   histograms.push_back(h_NJet);
-   histograms_MC.push_back(h_NJet);
+   h_NJet_S1 = new TH1F("NJet", "Number of jets at step 1", 10, 0, 10);
+   h_NJet_S1->SetXTitle("No. Jets");
+   h_NJet_S1->Sumw2();
+   histograms.push_back(h_NJet_S1);
+   histograms_MC.push_back(h_NJet_S1);
 
-   h_NBJet = new TH1F("NBJet", "Number of b jets", 5, 0, 5);
-   h_NBJet->SetXTitle("No. b Jets");
-   h_NBJet->Sumw2();
-   histograms.push_back(h_NBJet);
-   histograms_MC.push_back(h_NBJet);
+   h_NBJet_S1 = new TH1F("NBJet", "Number of b jets at step 1", 5, 0, 5);
+   h_NBJet_S1->SetXTitle("No. b Jets");
+   h_NBJet_S1->Sumw2();
+   histograms.push_back(h_NBJet_S1);
+   histograms_MC.push_back(h_NBJet_S1);
+
+   h_NJet_S2 = new TH1F("NJet", "Number of jets at step 2", 10, 0, 10);
+   h_NJet_S2->SetXTitle("No. Jets");
+   h_NJet_S2->Sumw2();
+   histograms.push_back(h_NJet_S2);
+   histograms_MC.push_back(h_NJet_S2);
+
+   h_NBJet_S2 = new TH1F("NBJet", "Number of b jets at step 2", 5, 0, 5);
+   h_NBJet_S2->SetXTitle("No. b Jets");
+   h_NBJet_S2->Sumw2();
+   histograms.push_back(h_NBJet_S2);
+   histograms_MC.push_back(h_NBJet_S2);
+
  
 }
 
@@ -203,8 +216,15 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
        if( jet->IsBTagged() ) ++N_BJets;
      }
 
-     h_NJet->Fill( N_Jets, EventWeight);
-     h_NBJet->Fill( N_BJets, EventWeight);
+     h_NJet_S1->Fill( N_Jets, EventWeight);
+     h_NBJet_S1->Fill( N_BJets, EventWeight);
+
+     if ( N_BJets >= 1) {
+
+       h_NJet_S2->Fill( N_Jets, EventWeight);
+       h_NBJet_S2->Fill( N_BJets, EventWeight);
+ 
+     }
 
    }
    //////////////////////////////
