@@ -104,25 +104,25 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    histograms_MC.push_back(h_NMuon);
 
    // Added two more histograms (Taejeong)   
-   h_NJet_S1 = new TH1F("NJet", "Number of jets at step 1", 10, 0, 10);
+   h_NJet_S1 = new TH1F("NJet_S1", "Number of jets at step 1", 10, 0, 10);
    h_NJet_S1->SetXTitle("No. Jets");
    h_NJet_S1->Sumw2();
    histograms.push_back(h_NJet_S1);
    histograms_MC.push_back(h_NJet_S1);
 
-   h_NBJet_S1 = new TH1F("NBJet", "Number of b jets at step 1", 5, 0, 5);
+   h_NBJet_S1 = new TH1F("NBJet_S1", "Number of b jets at step 1", 5, 0, 5);
    h_NBJet_S1->SetXTitle("No. b Jets");
    h_NBJet_S1->Sumw2();
    histograms.push_back(h_NBJet_S1);
    histograms_MC.push_back(h_NBJet_S1);
 
-   h_NJet_S2 = new TH1F("NJet", "Number of jets at step 2", 10, 0, 10);
+   h_NJet_S2 = new TH1F("NJet_S2", "Number of jets at step 2", 10, 0, 10);
    h_NJet_S2->SetXTitle("No. Jets");
    h_NJet_S2->Sumw2();
    histograms.push_back(h_NJet_S2);
    histograms_MC.push_back(h_NJet_S2);
 
-   h_NBJet_S2 = new TH1F("NBJet", "Number of b jets at step 2", 5, 0, 5);
+   h_NBJet_S2 = new TH1F("NBJet_S2", "Number of b jets at step 2", 5, 0, 5);
    h_NBJet_S2->SetXTitle("No. b Jets");
    h_NBJet_S2->Sumw2();
    histograms.push_back(h_NBJet_S2);
