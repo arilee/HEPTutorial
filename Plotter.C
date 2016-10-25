@@ -115,6 +115,8 @@ void Plotter::Plot(std::string filename) {
 					it->at(i)->SetFillColor(kBlack);
 					break;
 				}
+                                float scale = luminosity/bg_X.at(j);
+                                it->at(i)->Scale( scale );
 				hs->Add(it->at(i));
 				l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
 				++j;

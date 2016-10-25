@@ -54,28 +54,28 @@ int main() {
    ch9->Add("files/single_top.root");
    ch9->Process(I,"single_top");
 
-	Plotter P;
-	P.SetData(A->histograms, std::string("Data"));
-	P.AddBg(B->histograms, std::string("TTbar"));
-	P.AddBg(C->histograms, std::string("Wjets"));
-	P.AddBg(D->histograms, std::string("DY"));
-	P.AddBg(E->histograms, std::string("WW"));
-	P.AddBg(F->histograms, std::string("WZ"));
-	P.AddBg(G->histograms, std::string("ZZ"));
-	P.AddBg(H->histograms, std::string("QCD"));
-	P.AddBg(I->histograms, std::string("single Top"));
+   Plotter P;
+   P.SetData(A->histograms, std::string("Data"));
+   P.AddBg(B->histograms, std::string("TTbar"));
+   P.AddBg(C->histograms, std::string("Wjets"));
+   P.AddBg(D->histograms, std::string("DY"));
+   P.AddBg(E->histograms, std::string("WW"));
+   P.AddBg(F->histograms, std::string("WZ"));
+   P.AddBg(G->histograms, std::string("ZZ"));
+   P.AddBg(H->histograms, std::string("QCD"));
+   P.AddBg(I->histograms, std::string("single Top"));
    
-	P.Plot(string("results.pdf"));
+   P.Plot(string("results.pdf"));
    
-	Plotter P_MC;
-	P_MC.AddBg(B->histograms_MC, std::string("TTbar"));
-	P_MC.AddBg(C->histograms_MC, std::string("Wjets"));
-	P_MC.AddBg(D->histograms_MC, std::string("DY"));
-	P_MC.AddBg(E->histograms_MC, std::string("WW"));
-	P_MC.AddBg(F->histograms_MC, std::string("WZ"));
-	P_MC.AddBg(G->histograms_MC, std::string("ZZ"));
-	P_MC.AddBg(H->histograms_MC, std::string("QCD"));
-	P_MC.AddBg(I->histograms_MC, std::string("single Top"));
+   Plotter P_MC;
+   P_MC.AddBg(B->histograms_MC, std::string("TTbar"));
+   P_MC.AddBg(C->histograms_MC, std::string("Wjets"));
+   P_MC.AddBg(D->histograms_MC, std::string("DY"));
+   P_MC.AddBg(E->histograms_MC, std::string("WW"));
+   P_MC.AddBg(F->histograms_MC, std::string("WZ"));
+   P_MC.AddBg(G->histograms_MC, std::string("ZZ"));
+   P_MC.AddBg(H->histograms_MC, std::string("QCD"));
+   P_MC.AddBg(I->histograms_MC, std::string("single Top"));
    P_MC.Plot(string("results_MC.pdf"));
 
 }

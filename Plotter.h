@@ -24,28 +24,31 @@ class Plotter {
 public:
 	Plotter();
 	virtual ~Plotter();
-	void SetData(std::vector<TH1F*> v, std::string n){
+	void SetData(std::vector<TH1F*> v, std::string n, float l = 1.0){
 		data.push_back(v);
 		data_names.push_back(n);
 		N_histos = v.size();
+                luminosity = l; 
 	}
 	void ClearData(){
 		data.clear();
 		data_names.clear();
 	}
-	void AddBg(std::vector<TH1F*> v, std::string n){
-		bg.push_back(v);
-		bg_names.push_back(n);
-		N_histos = v.size();
+	void AddBg(std::vector<TH1F*> v, std::string n, float x = 1.0){
+                bg.push_back(v);
+                bg_names.push_back(n);
+                N_histos = v.size();
+                bg_X.push_back(x);
 	}
 	void ClearBg(){
 		bg.clear();
 		bg_names.clear();
 	}
-	void AddSig(std::vector<TH1F*> v, std::string n){
+	void AddSig(std::vector<TH1F*> v, std::string n, float x = 1.0){
 		signal.push_back(v);
 		signal_names.push_back(n);
 		N_histos = v.size();
+                signal_X.push_back(x);
 	}
 	void ClearSig(){
 		signal.clear();
@@ -61,8 +64,13 @@ private:
 	std::vector < std::string > data_names;
 	std::vector < std::string > bg_names;
 	std::vector < std::string > signal_names;
+ 
+        std::vector < float > bg_X; 
+        std::vector < float > signal_X;
 
 	int N_histos;
+
+        float luminosity; 
 
 };
 
