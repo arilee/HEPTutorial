@@ -15,6 +15,8 @@ void Plotter::Plot(std::string filename) {
 	gROOT->SetStyle("Plain");
    
 	TStyle *MyStyle = new TStyle("MyStyle","My Root Styles");
+        MyStyle->SetCanvasDefH(600);
+        MyStyle->SetCanvasDefW(600);
 	MyStyle->SetStatColor(0);
 	MyStyle->SetCanvasColor(0);
 	MyStyle->SetPadColor(0);
@@ -67,11 +69,10 @@ void Plotter::Plot(std::string filename) {
           int Nset = data.size() + bg.size() + signal.size();
           if (Nset > 20)
             Nset = 20.;
-          l = new TLegend(0.76, 0.95 - 0.8 * Nset / 20., 1.0, 0.95);
-          l->SetFillStyle(1001);
-          l->SetFillColor(kWhite);
-          l->SetLineColor(kWhite);
-          l->SetLineWidth(2);
+          l = new TLegend(0.76, 0.90 - 0.8 * Nset / 20., 1.0, 0.95);
+          l->SetTextSize(0.04);
+          l->SetFillColor(0);
+          l->SetLineColor(0);
 
           if (bg.size() > 0) {
 	    hs = new THStack("hs", bg.at(0).at(i)->GetName());
@@ -115,7 +116,7 @@ void Plotter::Plot(std::string filename) {
             }
           }
 
-          TCanvas *c = new TCanvas("c", "c", 800, 600);
+          TCanvas *c = new TCanvas(Form("c_%i",i), "c", 800, 600);
           c->SetLogy(DrawLog);
           std::string plotname;
   
@@ -144,8 +145,7 @@ void Plotter::Plot(std::string filename) {
            hs->GetXaxis()->SetNdivisions(505);
            hs->GetYaxis()->SetTitleOffset(1.3);
            
-           if (bg.size() > 0)
-             hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
+           hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
            hs->GetYaxis()->SetTitle("Events");
          
            l->Draw("same");

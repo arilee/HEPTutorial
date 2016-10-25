@@ -33,7 +33,9 @@ public:
    TTree *fChain; //!pointer to the analyzed TTree or TChain
    
    // Declaration of leaf types
-   Int_t NBJet;
+   Int_t IsMuonTrig;
+   Int_t NBJet_CSVM;
+   Int_t NBJet_CSVT;
    Int_t NJet;
    Float_t Jet_Pt[10]; //[NJet]
    Float_t Jet_Eta[10]; //[NJet]
@@ -167,15 +169,16 @@ public:
    float norm_scale;
    float SF_b;
   
-   TH1F *h_Mmumu[4];
-   TH1F *h_NMuon[4];
-   TH1F *h_MuonIso[4];
-   TH1F *h_NVertex[4];
-   TH1F *h_WMuon_MT[4];
-   TH1F *h_WMuon_Phi[4];
-   TH1F *h_NJet[4]; 
-   TH1F *h_NBJet[4]; 
-   TH1F *h_MET[4]; 
+   TH1F *h_Mmumu[5];
+   TH1F *h_NMuon[5];
+   TH1F *h_MuonIso[5];
+   TH1F *h_NVertex[5];
+   TH1F *h_WMuon_MT[5];
+   TH1F *h_WMuon_Phi[5];
+   TH1F *h_NJet[5]; 
+   TH1F *h_NBJet_CSVM[5]; 
+   TH1F *h_NBJet_CSVT[5]; 
+   TH1F *h_MET[5]; 
  
    vector<TH1F*> histograms;
    vector<TH1F*> histograms_MC;
@@ -200,7 +203,9 @@ void MyAnalysis::Init(TTree *tree)
    fChain = tree;
    fChain->SetMakeClass(1);
    
-   fChain->SetBranchAddress("NBJet", &NBJet);
+   fChain->SetBranchAddress("IsMuonTrig", &IsMuonTrig);
+   fChain->SetBranchAddress("NBJet_CSVM", &NBJet_CSVM);
+   fChain->SetBranchAddress("NBJet_CSVT", &NBJet_CSVT);
    fChain->SetBranchAddress("NJet", &NJet);
    fChain->SetBranchAddress("Jet_Pt", Jet_Pt);
    fChain->SetBranchAddress("Jet_Eta", Jet_Eta);

@@ -94,7 +94,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    
    TString option = GetOption();
 
-   for(int i=0; i < 4; i++){ 
+   for(int i=0; i < 5; i++){ 
      h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 40 , 0, 40);
      h_NVertex[i]->SetXTitle("No. Vertexs");
      h_NVertex[i]->Sumw2();
@@ -108,7 +108,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
      histograms_MC.push_back(h_Mmumu[i]);
    
      h_NMuon[i] = new TH1F(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
-     h_NMuon[i]->SetXTitle("No. Muons");
+     h_NMuon[i]->SetXTitle("Muon Multiplicity");
      h_NMuon[i]->Sumw2();
      histograms.push_back(h_NMuon[i]);
      histograms_MC.push_back(h_NMuon[i]);
@@ -132,16 +132,22 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
      histograms_MC.push_back(h_WMuon_Phi[i]);
 
      h_NJet[i] = new TH1F(Form("h_NJet_S%i_%s",i,option.Data()), "Number of jets", 14, 0, 14);
-     h_NJet[i]->SetXTitle("No. Jets");
+     h_NJet[i]->SetXTitle("Jet Multiplicity");
      h_NJet[i]->Sumw2();
      histograms.push_back(h_NJet[i]);
      histograms_MC.push_back(h_NJet[i]);
 
-     h_NBJet[i] = new TH1F(Form("h_NBJet_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
-     h_NBJet[i]->SetXTitle("No. b Jets");
-     h_NBJet[i]->Sumw2();
-     histograms.push_back(h_NBJet[i]);
-     histograms_MC.push_back(h_NBJet[i]);
+     h_NBJet_CSVM[i] = new TH1F(Form("h_NBJet_CSVM_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
+     h_NBJet_CSVM[i]->SetXTitle("b-tagged Jet Multiplicity (CSVM)");
+     h_NBJet_CSVM[i]->Sumw2();
+     histograms.push_back(h_NBJet_CSVM[i]);
+     histograms_MC.push_back(h_NBJet_CSVM[i]);
+
+     h_NBJet_CSVT[i] = new TH1F(Form("h_NBJet_CSVT_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
+     h_NBJet_CSVT[i]->SetXTitle("b-tagged Jet Multiplicity (CSVT)");
+     h_NBJet_CSVT[i]->Sumw2();
+     histograms.push_back(h_NBJet_CSVT[i]);
+     histograms_MC.push_back(h_NBJet_CSVT[i]);
 
      h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 100, 0, 100);
      h_MET[i]->SetXTitle("MET");
@@ -233,6 +239,8 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    }
 
    if( debug ) cout << "filling at step0..." << endl;
+
+   if(!IsMuonTrig) return kTRUE;
    //////////////////////////////
    //step 0 
    if( NMuon > 0 ){
@@ -242,7 +250,8 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      h_WMuon_MT[0]->Fill( WMuon_MT[sel_mu], EventWeight);
      h_WMuon_Phi[0]->Fill( WMuon_Phi[sel_mu], EventWeight);
      h_NJet[0]->Fill(NJet, EventWeight);
-     h_NBJet[0]->Fill(NBJet, EventWeight);
+     h_NBJet_CSVM[0]->Fill(NBJet_CSVM, EventWeight);
+     h_NBJet_CSVT[0]->Fill(NBJet_CSVT, EventWeight);
      h_MET[0]->Fill(MET, EventWeight);
    }
 
@@ -255,7 +264,8 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      h_WMuon_MT[1]->Fill( WMuon_MT[sel_mu], EventWeight);
      h_WMuon_Phi[1]->Fill( WMuon_Phi[sel_mu], EventWeight);
      h_NJet[1]->Fill(NJet, EventWeight);
-     h_NBJet[1]->Fill(NBJet, EventWeight); 
+     h_NBJet_CSVM[1]->Fill(NBJet_CSVM, EventWeight); 
+     h_NBJet_CSVT[1]->Fill(NBJet_CSVT, EventWeight); 
      h_MET[1]->Fill(MET, EventWeight);
       
      if (N_IsoMuon > 1 ) h_Mmumu[1]->Fill((*muon1 + *muon2).M(), EventWeight);
@@ -268,20 +278,34 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
        h_WMuon_MT[2]->Fill( WMuon_MT[sel_mu], EventWeight);
        h_WMuon_Phi[2]->Fill( WMuon_Phi[sel_mu], EventWeight);
        h_NJet[2]->Fill(NJet, EventWeight);
-       h_NBJet[2]->Fill(NBJet, EventWeight);
+       h_NBJet_CSVM[2]->Fill(NBJet_CSVM, EventWeight);
+       h_NBJet_CSVT[2]->Fill(NBJet_CSVT, EventWeight);
        h_MET[2]->Fill(MET, EventWeight);
 
        if( debug ) cout << "filling at step3..." << endl;
 
-       if( NBJet > 1 ){ //step 3
+       if( NBJet_CSVM > 1 ){ //step 3
          h_MuonIso[3]->Fill(Muon_Iso03[sel_mu], EventWeight); 
          h_NMuon[3]->Fill(N_IsoMuon, EventWeight);
          h_NVertex[3]->Fill(NVertex, EventWeight);
          h_WMuon_MT[3]->Fill( WMuon_MT[sel_mu], EventWeight);
          h_WMuon_Phi[3]->Fill( WMuon_Phi[sel_mu], EventWeight);
          h_NJet[3]->Fill(NJet, EventWeight);
-         h_NBJet[3]->Fill(NBJet, EventWeight);
+         h_NBJet_CSVM[3]->Fill(NBJet_CSVM, EventWeight);
+         h_NBJet_CSVT[3]->Fill(NBJet_CSVT, EventWeight);
          h_MET[3]->Fill(MET, EventWeight);
+
+         if( NBJet_CSVT > 1 ){ 
+           h_MuonIso[4]->Fill(Muon_Iso03[sel_mu], EventWeight);
+           h_NMuon[4]->Fill(N_IsoMuon, EventWeight);
+           h_NVertex[4]->Fill(NVertex, EventWeight);
+           h_WMuon_MT[4]->Fill( WMuon_MT[sel_mu], EventWeight);
+           h_WMuon_Phi[4]->Fill( WMuon_Phi[sel_mu], EventWeight);
+           h_NJet[4]->Fill(NJet, EventWeight);
+           h_NBJet_CSVM[4]->Fill(NBJet_CSVM, EventWeight);
+           h_NBJet_CSVT[4]->Fill(NBJet_CSVT, EventWeight);          
+           h_MET[4]->Fill(MET, EventWeight);
+         }
        } 
 
      }

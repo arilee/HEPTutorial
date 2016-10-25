@@ -7,13 +7,13 @@
 
 int main() {
    
-   float lumi = 5000.;
+   float lumi = 12900.;
    
-   TString dir = "/xrootd/store/user/tjkim/ntuples/hep2016/V2";
+   TString dir = "/xrootd/store/user/tjkim/ntuples/hep2016/V4";
 
    int nevt = -1;
 
-   bool run = false;
+   bool run = true;
 
    if( run ) {
 
@@ -37,16 +37,15 @@ int main() {
    ch4->Add(Form("%s/hep_DYJets.root",dir.Data()),nevt);
    ch4->Process(D,"DYJets");
 
-/* 
    MyAnalysis *E = new MyAnalysis(1,1,18610.0,lumi);
    TChain* ch5 = new TChain("TopTree/events");
    ch5->Add(Form("%s/hep_DYJets_10to50.root",dir.Data()),nevt);
    ch5->Process(E,"DYJets_10to50");
  
-   MyAnalysis *I = new MyAnalysis(1,1,44.33,lumi);
+   MyAnalysis *F = new MyAnalysis(1,1,44.33,lumi);
    TChain* ch6 = new TChain("TopTree/events");
    ch6->Add(Form("%s/hep_SingleTop_t.root",dir.Data()),nevt);
-   ch6->Process(I,"SingleTop_t");
+   ch6->Process(F,"SingleTop_t");
 
    MyAnalysis *J = new MyAnalysis(1,1,26.38,lumi);
    TChain* ch7 = new TChain("TopTree/events");
@@ -57,40 +56,26 @@ int main() {
    TChain* ch8 = new TChain("TopTree/events");
    ch8->Add(Form("%s/hep_SingleTop_tW.root",dir.Data()),nevt);
    ch8->Process(K,"SingleTop_tW");
-*/
+
+   MyAnalysis *L = new MyAnalysis(1,1,35.6,lumi);
+   TChain* ch9 = new TChain("TopTree/events");
+   ch9->Add(Form("%s/hep_SingleTbar_tW.root",dir.Data()),nevt);
+   ch9->Process(L,"SingleTbar_tW");
+
    }
 
    Plotter P;
-   //cout << "plot declare " << endl;
-//   for (int i=0; i < D->histograms.size() ;i++) {
-     //merge for DY
-//     D->histograms[i]->Add(E->histograms[i]);
-     //merge for SingleTop
-//     I->histograms[i]->Add(J->histograms[i]);
-//     I->histograms[i]->Add(K->histograms[i]);
-//   } 
 
    P.SetData("hist_data.root", std::string("Data"));
-   P.AddBg("hist_TT_powheg.root", std::string("TTbar"));
-   P.AddBg("hist_WJets.root", std::string("Wjets"));
-   P.AddBg("hist_DYJets.root", std::string("DY"));
+   P.AddBg("hist_TT_powheg.root", std::string("t#bar{t}"));
+   P.AddBg("hist_WJets.root", std::string("W #rightarrow l#nu"));
+   P.AddBg("hist_DYJets.root", std::string("Z/#gamma* #rightarrow ll"));
+   P.AddBg("hist_DYJets_10to50.root", std::string("Z/#gamma* #rightarrow ll (10-50)"));
+   P.AddBg("hist_SingleTop_t.root", std::string("Single Top_t"));
+   P.AddBg("hist_SingleTbar_t.root", std::string("single Tbar-t"));
+   P.AddBg("hist_SingleTop_tW.root", std::string("single Top-tW"));
+   P.AddBg("hist_SingleTbar_tW.root", std::string("single Tbar-tW"));
  
-   //P.SetData(A->histograms, std::string("Data"));
-   //P.AddBg(B->histograms, std::string("TTbar"));
-   //P.AddBg(C->histograms, std::string("Wjets"));
-   //P.AddBg(D->histograms, std::string("DY"));
-
-   //P.AddBg(E->histograms, std::string("DY20to50"));
-   //P.AddBg(I->histograms, std::string("Single Top"));
-   //P.AddBg(I->histograms, std::string("single Top-t"));
-   //P.AddBg(J->histograms, std::string("single Tbar-t"));
-   //P.AddBg(K->histograms, std::string("single Top-tW"));
- 
-   //cout << "pdf" <<endl;
-  
-   //P.Plot(string("results.pdf"));
    P.Plot("results.pdf");
-
-   //cout << "plot" << endl;
 
 }
