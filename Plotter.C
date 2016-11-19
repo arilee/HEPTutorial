@@ -115,14 +115,17 @@ void Plotter::Plot(std::string filename) {
 					it->at(i)->SetFillColor(kBlack);
 					break;
 				}
-                                float scale = luminosity/bg_X.at(j);
-                                it->at(i)->Scale( scale );
+                                if(useLumi){
+                                  float scale = luminosity/(bg_N.at(j)/bg_X.at(j));
+                                  it->at(i)->Scale( scale );
+                                }
 				hs->Add(it->at(i));
 				l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
 				++j;
 			}
 		}
-		TCanvas *c = new TCanvas("c", "c", 800, 600);
+		//TCanvas *c = new TCanvas("c", "c", 800, 600);
+                TCanvas *c = new TCanvas(Form("c_%i",i), "c", 800,600);
 		c->SetLogy(DrawLog);
 		std::string plotname;
 		if (data.size() > 0) {
@@ -134,32 +137,30 @@ void Plotter::Plot(std::string filename) {
 			data.at(0).at(i)->GetXaxis()->SetNdivisions(505);
 			data.at(0).at(i)->Draw("");
 			l->AddEntry(data.at(0).at(i), data_names.at(0).c_str(), "p");
-			if (bg.size() > 0)
-			hs->Draw("histsame");
+			if (bg.size() > 0) hs->Draw("histsame");
 			data.at(0).at(i)->SetMarkerStyle(20);
 			data.at(0).at(i)->Draw("psame");
 			l->Draw("same");
 		}
 		if (data.size() == 0 && bg.size() > 0) {
 			plotname = std::string(bg.at(0).at(i)->GetName());
-			hs->Draw("hist");
-			hs->GetXaxis()->SetTitleOffset(1.3);
-			hs->GetXaxis()->SetNdivisions(505);
-			hs->GetYaxis()->SetTitleOffset(1.3);
-			if (bg.size() > 0)
-				hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
-			hs->GetYaxis()->SetTitle("Events");
-			
+                        hs->Draw("hist");
+                        hs->SetMaximum(5 * bg.at(0).at(i)->GetMaximum());
+                        hs->GetXaxis()->SetTitleOffset(1.3);
+                        hs->GetYaxis()->SetTitleOffset(1.3);
+                        hs->GetYaxis()->SetTitle("Events");
+                        hs->GetXaxis()->SetNdivisions(505);
+                        hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
 			l->Draw("same");
 		}
 //      c->Print((filename+std::string("_")+plotname+std::string(".pdf")).c_str());
-		if (i == 0 && N_histos > 1)
+		if (i == 0 && N_histos > 1){
 			c->Print((filename+std::string("(")).c_str());
-		else if (i > 0 && i == N_histos - 1)
+		}else if (i > 0 && i == N_histos - 1){
 			c->Print((filename+std::string(")")).c_str());
-		else
+		}else{
 			c->Print(filename.c_str());
-		
+                }
 	}
 	
 }

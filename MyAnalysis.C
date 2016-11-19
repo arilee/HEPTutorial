@@ -90,45 +90,46 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    // The tree argument is deprecated (on PROOF 0 is passed).
    
    TString option = GetOption();
-   
-   h_Mmumu = new TH1F("Mmumu", "Invariant di-muon mass", 60, 60, 120);
+  
+   cout << "Starting Process : " << option.Data() << endl;
+ 
+   h_Mmumu = new TH1F(Form("Mmumu_%s",option.Data()), "Invariant di-muon mass", 60, 60, 120);
    h_Mmumu->SetXTitle("m_{#mu#mu}");
    h_Mmumu->Sumw2();
    histograms.push_back(h_Mmumu);
    histograms_MC.push_back(h_Mmumu);
    
-   h_NMuon = new TH1F("NMuon", "Number of muons", 7, 0, 7);
+   h_NMuon = new TH1F(Form("NMuon_%s",option.Data()), "Number of muons", 7, 0, 7);
    h_NMuon->SetXTitle("No. Muons");
    h_NMuon->Sumw2();
    histograms.push_back(h_NMuon);
    histograms_MC.push_back(h_NMuon);
 
    // Added two more histograms (Taejeong)   
-   h_NJet_S1 = new TH1F("NJet_S1", "Number of jets at step 1", 10, 0, 10);
+   h_NJet_S1 = new TH1F(Form("NJet_S1_%s",option.Data()), "Number of jets at step 1", 10, 0, 10);
    h_NJet_S1->SetXTitle("No. Jets");
    h_NJet_S1->Sumw2();
    histograms.push_back(h_NJet_S1);
    histograms_MC.push_back(h_NJet_S1);
 
-   h_NBJet_S1 = new TH1F("NBJet_S1", "Number of b jets at step 1", 5, 0, 5);
+   h_NBJet_S1 = new TH1F(Form("NBJet_S1_%s",option.Data()), "Number of b jets at step 1", 5, 0, 5);
    h_NBJet_S1->SetXTitle("No. b Jets");
    h_NBJet_S1->Sumw2();
    histograms.push_back(h_NBJet_S1);
    histograms_MC.push_back(h_NBJet_S1);
 
-   h_NJet_S2 = new TH1F("NJet_S2", "Number of jets at step 2", 10, 0, 10);
+   h_NJet_S2 = new TH1F(Form("NJet_S2_%s",option.Data()), "Number of jets at step 2", 10, 0, 10);
    h_NJet_S2->SetXTitle("No. Jets");
    h_NJet_S2->Sumw2();
    histograms.push_back(h_NJet_S2);
    histograms_MC.push_back(h_NJet_S2);
 
-   h_NBJet_S2 = new TH1F("NBJet_S2", "Number of b jets at step 2", 5, 0, 5);
+   h_NBJet_S2 = new TH1F(Form("NBJet_S2_%s",option.Data()), "Number of b jets at step 2", 5, 0, 5);
    h_NBJet_S2->SetXTitle("No. b Jets");
    h_NBJet_S2->Sumw2();
    histograms.push_back(h_NBJet_S2);
    histograms_MC.push_back(h_NBJet_S2);
 
- 
 }
 
 Bool_t MyAnalysis::Process(Long64_t entry) {
