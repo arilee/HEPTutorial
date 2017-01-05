@@ -7,64 +7,74 @@
 
 int main() {
    
-   float lumi = 50.;
+   float lumi = 36000.;
    
+   TString dir = "/data/users/jhgoh/hep2016/v803_1";
+
+   int nevt = -1;
+
+   bool run = true;
+
+   if( run ) {
+
    MyAnalysis *A = new MyAnalysis();
-   TChain* ch = new TChain("events");
-   ch->Add("files/data.root");
+   TChain* ch = new TChain("TopTree/events");
+   ch->Add(Form("%s/hep_SingleMuon_Run2016.root",dir.Data()), nevt);
    ch->Process(A,"data");
-   
-   MyAnalysis *B = new MyAnalysis();
-   TChain* ch2 = new TChain("events");
-   ch2->Add("files/ttbar.root");
-   ch2->Process(B,"ttbar");
-   
-   MyAnalysis *C = new MyAnalysis();
-   TChain* ch3 = new TChain("events");
-   ch3->Add("files/wjets.root");
-   ch3->Process(C,"wjets");
-   
-   MyAnalysis *D = new MyAnalysis();
-   TChain* ch4 = new TChain("events");
-   ch4->Add("files/dy.root");
-   ch4->Process(D,"dy");
-   
-   MyAnalysis *E = new MyAnalysis();
-   TChain* ch5 = new TChain("events");
-   ch5->Add("files/ww.root");
-   ch5->Process(E,"ww");
 
-   MyAnalysis *F = new MyAnalysis();
-   TChain* ch6 = new TChain("events");
-   ch6->Add("files/wz.root");
-   ch6->Process(F,"wz");
+   MyAnalysis *B = new MyAnalysis(1,1,831.8,lumi);
+   TChain* ch2 = new TChain("TopTree/events");
+   ch2->Add(Form("%s/hep_TT_powheg.root",dir.Data()), nevt);
+   ch2->Process(B,"TT_powheg");
 
-   MyAnalysis *G = new MyAnalysis();
-   TChain* ch7 = new TChain("events");
-   ch7->Add("files/zz.root");
-   ch7->Process(G,"zz");
-
-   MyAnalysis *H = new MyAnalysis();
-   TChain* ch8 = new TChain("events");
-   ch8->Add("files/qcd.root");
-   ch8->Process(H,"qcd");
+   MyAnalysis *C = new MyAnalysis(1,1,61524,lumi);
+   TChain* ch3 = new TChain("TopTree/events");
+   ch3->Add(Form("%s/hep_WJets.root",dir.Data()),nevt);
+   ch3->Process(C,"WJets");
    
-   MyAnalysis *I = new MyAnalysis();
-   TChain* ch9 = new TChain("events");
-   ch9->Add("files/single_top.root");
-   ch9->Process(I,"single_top");
+   MyAnalysis *D = new MyAnalysis(1,1,6025.2,lumi);
+   TChain* ch4 = new TChain("TopTree/events");
+   ch4->Add(Form("%s/hep_DYJets.root",dir.Data()),nevt);
+   ch4->Process(D,"DYJets");
+
+   MyAnalysis *E = new MyAnalysis(1,1,18610.0,lumi);
+   TChain* ch5 = new TChain("TopTree/events");
+   ch5->Add(Form("%s/hep_DYJets_10to50.root",dir.Data()),nevt);
+   ch5->Process(E,"DYJets_10to50");
+ 
+   MyAnalysis *F = new MyAnalysis(1,1,44.33,lumi);
+   TChain* ch6 = new TChain("TopTree/events");
+   ch6->Add(Form("%s/hep_SingleTop_t.root",dir.Data()),nevt);
+   ch6->Process(F,"SingleTop_t");
+
+   MyAnalysis *J = new MyAnalysis(1,1,26.38,lumi);
+   TChain* ch7 = new TChain("TopTree/events");
+   ch7->Add(Form("%s/hep_SingleTbar_t.root",dir.Data()),nevt);
+   ch7->Process(J,"SingleTbar_t");
+
+   MyAnalysis *K = new MyAnalysis(1,1,35.6,lumi);
+   TChain* ch8 = new TChain("TopTree/events");
+   ch8->Add(Form("%s/hep_SingleTop_tW.root",dir.Data()),nevt);
+   ch8->Process(K,"SingleTop_tW");
+
+   MyAnalysis *L = new MyAnalysis(1,1,35.6,lumi);
+   TChain* ch9 = new TChain("TopTree/events");
+   ch9->Add(Form("%s/hep_SingleTbar_tW.root",dir.Data()),nevt);
+   ch9->Process(L,"SingleTbar_tW");
+
+   }
 
    Plotter P;
-   P.SetData("hists/hist_data.root", std::string("Data"));
-   P.AddBg("hists/hist_ttbar.root", std::string("TTbar"));
-   P.AddBg("hists/hist_wjets.root", std::string("Wjets"));
-   P.AddBg("hists/hist_dy.root", std::string("DY"));
-   P.AddBg("hists/hist_ww.root", std::string("WW"));
-   P.AddBg("hists/hist_wz.root", std::string("WZ"));
-   P.AddBg("hists/hist_zz.root", std::string("ZZ"));
-   P.AddBg("hists/hist_qcd.root", std::string("QCD"));
-   P.AddBg("hists/hist_single_top.root", std::string("single Top"));
-   
-   P.Plot(string("results.pdf"));
+   P.SetLumi(36500);
+   P.SetData("hist_data.root", std::string("Data"));
+   P.AddBg("hist_TT_powheg.root", std::string("t#bar{t}"), lumi) ;//831.8);
+   P.AddBg("hist_WJets.root", std::string("W #rightarrow l#nu"), lumi); //61524);
+   P.AddBg("hist_DYJets.root", std::string("Z/#gamma* #rightarrow ll"), lumi); //6025.2);
+   P.AddBg("hist_DYJets_10to50.root", std::string("Z/#gamma* #rightarrow ll (10-50)"), lumi); //18610.0);
+   P.AddBg("hist_SingleTop_t.root", std::string("Single Top_t"), lumi); //44.33);
+   P.AddBg("hist_SingleTbar_t.root", std::string("single Tbar-t"), lumi); //26.38);
+   P.AddBg("hist_SingleTop_tW.root", std::string("single Top-tW"), lumi); //35.6);
+   P.AddBg("hist_SingleTbar_tW.root", std::string("single Tbar-tW"), lumi); //35.6);
+   P.Plot("results.pdf");
 
 }

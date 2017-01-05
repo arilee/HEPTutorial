@@ -34,44 +34,47 @@ void MyAnalysis::BuildEvent() {
    
    Muons.clear();
    for (int i = 0; i < NMuon; ++i) {
-      MyMuon muon(Muon_Px[i], Muon_Py[i], Muon_Pz[i], Muon_E[i]);
-      muon.SetIsolation(Muon_Iso[i]);
+      MyMuon muon(Muon_Pt[i], Muon_Eta[i], Muon_Phi[i], Muon_E[i]);
+      muon.SetIsolation(Muon_Iso03[i]);
       muon.SetCharge(Muon_Charge[i]);
       Muons.push_back(muon);
    }
    
    Electrons.clear();
    for (int i = 0; i < NElectron; ++i) {
-      MyElectron electron(Electron_Px[i], Electron_Py[i], Electron_Pz[i], Electron_E[i]);
-      electron.SetIsolation(Electron_Iso[i]);
+      MyElectron electron(Electron_Pt[i], Electron_Eta[i], Electron_Phi[i], Electron_E[i]);
+      electron.SetIsolation(Electron_Iso03[i]);
       electron.SetCharge(Electron_Charge[i]);
       Electrons.push_back(electron);
    }
    
    Photons.clear();
    for (int i = 0; i < NPhoton; ++i) {
-      MyPhoton photon(Photon_Px[i], Photon_Py[i], Photon_Pz[i], Photon_E[i]);
+      MyPhoton photon(Photon_Pt[i], Photon_Eta[i], Photon_Phi[i], Photon_E[i]);
       photon.SetIsolation(Photon_Iso[i]);
       Photons.push_back(photon);
    }
    
    Jets.clear();
    for (int i = 0; i < NJet; ++i) {
-      MyJet jet(Jet_Px[i], Jet_Py[i], Jet_Pz[i], Jet_E[i]);
-      jet.SetBTagDiscriminator(Jet_btag[i]);
-      jet.SetJetID(Jet_ID[i]);
+      MyJet jet(Jet_Pt[i], Jet_Eta[i], Jet_Phi[i], Jet_E[i]);
+      jet.SetBTagDiscriminator(Jet_bDiscriminator[i]);
+      //jet.SetJetID(Jet_ID[i]);
       Jets.push_back(jet);
    }
    
-   hadB.SetXYZM(MChadronicBottom_px, MChadronicBottom_py, MChadronicBottom_pz, 4.8);
-   lepB.SetXYZM(MCleptonicBottom_px, MCleptonicBottom_py, MCleptonicBottom_pz, 4.8);
-   hadWq.SetXYZM(MChadronicWDecayQuark_px, MChadronicWDecayQuark_py, MChadronicWDecayQuark_pz, 0.0);
-   hadWqb.SetXYZM(MChadronicWDecayQuarkBar_px, MChadronicWDecayQuarkBar_py, MChadronicWDecayQuarkBar_pz, 0.0);
-   lepWl.SetXYZM(MClepton_px, MClepton_py, MClepton_pz, 0.0);
-   lepWn.SetXYZM(MCneutrino_px, MCneutrino_py, MCneutrino_pz, 0.0);
-   met.SetXYZM(MET_px, MET_py, 0., 0.);
-   
-   EventWeight *= weight_factor;
+   //hadB.SetXYZM(MChadronicBottom_px, MChadronicBottom_py, MChadronicBottom_pz, 4.8);
+   //lepB.SetXYZM(MCleptonicBottom_px, MCleptonicBottom_py, MCleptonicBottom_pz, 4.8);
+   //hadWq.SetXYZM(MChadronicWDecayQuark_px, MChadronicWDecayQuark_py, MChadronicWDecayQuark_pz, 0.0);
+   //hadWqb.SetXYZM(MChadronicWDecayQuarkBar_px, MChadronicWDecayQuarkBar_py, MChadronicWDecayQuarkBar_pz, 0.0);
+   //lepWl.SetXYZM(MClepton_px, MClepton_py, MClepton_pz, 0.0);
+   //lepWn.SetXYZM(MCneutrino_px, MCneutrino_py, MCneutrino_pz, 0.0);
+   mymet.SetXYZM(MET_Px, MET_Py, 0., 0.);
+  
+   if( Lumi == 1 ){ norm_scale = 1.0; }
+   else{ norm_scale = Lumi/(nEvents/Sigma);}
+
+   EventWeight = PUWeight*GenWeight*weight_factor*norm_scale;
    
 }
 
@@ -81,7 +84,7 @@ void MyAnalysis::Begin(TTree * /*tree*/) {
    // The tree argument is deprecated (on PROOF 0 is passed).
    
    TString option = GetOption();
-   
+   cout << "Process " << option << endl;
 }
 
 void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
@@ -90,45 +93,63 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    // The tree argument is deprecated (on PROOF 0 is passed).
    
    TString option = GetOption();
-  
-   cout << "Starting Process : " << option.Data() << endl;
- 
-   h_Mmumu = new TH1F(Form("Mmumu_%s",option.Data()), "Invariant di-muon mass", 60, 60, 120);
-   h_Mmumu->SetXTitle("m_{#mu#mu}");
-   h_Mmumu->Sumw2();
-   histograms.push_back(h_Mmumu);
-   histograms_MC.push_back(h_Mmumu);
+
+   for(int i=0; i < 4; i++){ 
+     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 40 , 0, 40);
+     h_NVertex[i]->SetXTitle("No. Vertexs");
+     h_NVertex[i]->Sumw2();
+     histograms.push_back(h_NVertex[i]);
+     histograms_MC.push_back(h_NVertex[i]);
+    
+     h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i_%s",i,option.Data()), "Invariant di-muon mass", 100, 40, 140);
+     h_Mmumu[i]->SetXTitle("m_{#mu#mu}");
+     h_Mmumu[i]->Sumw2();
+     histograms.push_back(h_Mmumu[i]);
+     histograms_MC.push_back(h_Mmumu[i]);
    
-   h_NMuon = new TH1F(Form("NMuon_%s",option.Data()), "Number of muons", 7, 0, 7);
-   h_NMuon->SetXTitle("No. Muons");
-   h_NMuon->Sumw2();
-   histograms.push_back(h_NMuon);
-   histograms_MC.push_back(h_NMuon);
+     h_NMuon[i] = new TH1F(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
+     h_NMuon[i]->SetXTitle("Muon Multiplicity");
+     h_NMuon[i]->Sumw2();
+     histograms.push_back(h_NMuon[i]);
+     histograms_MC.push_back(h_NMuon[i]);
+ 
+     h_MuonIso[i] = new TH1F(Form("h_MuonIso_S%i_%s",i,option.Data()), "Relative Isolation", 80, 0, 0.4);
+     h_MuonIso[i]->SetXTitle("Relative Isolation (GeV)");
+     h_MuonIso[i]->Sumw2();
+     histograms.push_back(h_MuonIso[i]);
+     histograms_MC.push_back(h_MuonIso[i]);
+ 
+     h_WMuon_MT[i] = new TH1F(Form("h_WMuon_MT_S%i_%s",i,option.Data()), "Transverse mass", 60, 0, 120);
+     h_WMuon_MT[i]->SetXTitle("MT(Gev)");
+     h_WMuon_MT[i]->Sumw2();
+     histograms.push_back(h_WMuon_MT[i]);
+     histograms_MC.push_back(h_WMuon_MT[i]);
 
-   // Added two more histograms (Taejeong)   
-   h_NJet_S1 = new TH1F(Form("NJet_S1_%s",option.Data()), "Number of jets at step 1", 10, 0, 10);
-   h_NJet_S1->SetXTitle("No. Jets");
-   h_NJet_S1->Sumw2();
-   histograms.push_back(h_NJet_S1);
-   histograms_MC.push_back(h_NJet_S1);
+     h_WMuon_Phi[i] = new TH1F(Form("h_WMuon_Phi_S%i_%s",i,option.Data()), "DR between muon and MET", 70, 0, 3.5);
+     h_WMuon_Phi[i]->SetXTitle("DR between muon and MET");
+     h_WMuon_Phi[i]->Sumw2();
+     histograms.push_back(h_WMuon_Phi[i]);
+     histograms_MC.push_back(h_WMuon_Phi[i]);
 
-   h_NBJet_S1 = new TH1F(Form("NBJet_S1_%s",option.Data()), "Number of b jets at step 1", 5, 0, 5);
-   h_NBJet_S1->SetXTitle("No. b Jets");
-   h_NBJet_S1->Sumw2();
-   histograms.push_back(h_NBJet_S1);
-   histograms_MC.push_back(h_NBJet_S1);
+     h_NJet[i] = new TH1F(Form("h_NJet_S%i_%s",i,option.Data()), "Number of jets", 14, 0, 14);
+     h_NJet[i]->SetXTitle("Jet Multiplicity");
+     h_NJet[i]->Sumw2();
+     histograms.push_back(h_NJet[i]);
+     histograms_MC.push_back(h_NJet[i]);
 
-   h_NJet_S2 = new TH1F(Form("NJet_S2_%s",option.Data()), "Number of jets at step 2", 10, 0, 10);
-   h_NJet_S2->SetXTitle("No. Jets");
-   h_NJet_S2->Sumw2();
-   histograms.push_back(h_NJet_S2);
-   histograms_MC.push_back(h_NJet_S2);
+     h_NBJet[i] = new TH1F(Form("h_NBJet_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
+     h_NBJet[i]->SetXTitle("b-tagged Jet Multiplicity (CSVM)");
+     h_NBJet[i]->Sumw2();
+     histograms.push_back(h_NBJet[i]);
+     histograms_MC.push_back(h_NBJet[i]);
 
-   h_NBJet_S2 = new TH1F(Form("NBJet_S2_%s",option.Data()), "Number of b jets at step 2", 5, 0, 5);
-   h_NBJet_S2->SetXTitle("No. b Jets");
-   h_NBJet_S2->Sumw2();
-   histograms.push_back(h_NBJet_S2);
-   histograms_MC.push_back(h_NBJet_S2);
+     h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 100, 0, 100);
+     h_MET[i]->SetXTitle("MET");
+     h_MET[i]->Sumw2();
+     histograms.push_back(h_MET[i]);
+     histograms_MC.push_back(h_MET[i]);
+
+   }
 
 }
 
@@ -150,86 +171,126 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    // Use fStatus to set the return value of TTree::Process().
    //
    // The return value is currently not used.
-   
+   bool debug = false;
+ 
    ++TotalEvents;
    
    GetEntry(entry);
-   
+
    if (TotalEvents % 10000 == 0)
       cout << "Next event -----> " << TotalEvents << endl;
    
    BuildEvent();
-   
-   double MuonPtCut = 25.;
-   double MuonRelIsoCut = 0.10;
-   
-   //   cout << "Jets: " << endl;
-   //   for (vector<MyJet>::iterator it = Jets.begin(); it != Jets.end(); ++it) {
-   //      cout << "pt, eta, phi, btag, id: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", " << it->IsBTagged() << ", " << it->GetJetID()
-   //      << endl;
-   //   }
-   //   cout << "Muons: " << endl;
-   //   for (vector<MyMuon>::iterator it = Muons.begin(); it != Muons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso, charge: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", "
-   //      << it->GetIsolation() << ", " << it->GetCharge() << endl;
-   //   }
-   //   cout << "Electrons: " << endl;
-   //   for (vector<MyElectron>::iterator it = Electrons.begin(); it != Electrons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso, charge: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", "
-   //      << it->GetIsolation() << ", " << it->GetCharge() << endl;
-   //   }
-   //   cout << "Photons: " << endl;
-   //   for (vector<MyPhoton>::iterator it = Photons.begin(); it != Photons.end(); ++it) {
-   //      cout << "pt, eta, phi, iso: " << it->Pt() << ", " << it->Eta() << ", " << it->Phi() << ", " << it->GetIsolation()
-   //      << endl;
-   //   }
-   
-   
-   //////////////////////////////
-   // Exercise 1: Invariant Di-Muon mass
+
+   double MuonPtCut = 30.;
+   double MuonEtaCut = 30.;
+   double MuonRelIsoCut = 0.12;
+   double ElectronPtCut = 30.;
+   double ElectronEtaCut = 30.;
+   double ElectronRelIsoCut = 0.12;
    
    int N_IsoMuon = 0;
+
+   int sel_mu = 0;
+   int imu = 0;
+
+
    MyMuon *muon1, *muon2;
-   
    for (vector<MyMuon>::iterator jt = Muons.begin(); jt != Muons.end(); ++jt) {
-      if (jt->IsIsolated(MuonRelIsoCut)) {
-         ++N_IsoMuon;
-         if (N_IsoMuon == 1) muon1 = &(*jt);
-         if (N_IsoMuon == 2) muon2 = &(*jt);
-      }
+     if( Muon_Iso03[imu] < MuonRelIsoCut){
+       N_IsoMuon++;
+       if( N_IsoMuon == 1 ) {
+         muon1 = &(*jt); 
+         sel_mu = imu; 
+       }
+       if( N_IsoMuon == 2 ) muon2 = &(*jt); 
+     }
+     imu++;
    }
+
+   int N_IsoElectron = 0;
    
-   h_NMuon->Fill(N_IsoMuon, EventWeight);
-
-   if (N_IsoMuon > 1 && triggerIsoMu24) {
-     if (muon1->Pt()>MuonPtCut && muon2->Pt()>MuonPtCut ) {
-       h_Mmumu->Fill((*muon1 + *muon2).M(), EventWeight);
+   for (int i = 0; i < NElectron; ++i) {
+     if( Electron_Iso03[i] < ElectronRelIsoCut){
+       N_IsoElectron++;
      }
    }
 
-   if( N_IsoMuon == 1){
-  
-     int N_Jets = 0; 
-     int N_BJets = 0; 
-     for (vector<MyJet>::iterator jt = Jets.begin(); jt != Jets.end(); ++jt) {
-       ++N_Jets;
-       MyJet *jet = &(*jt); 
-       if( jet->IsBTagged() ) ++N_BJets;
+   int N_VetoMuon = 0;
+   
+   for (int i = 0; i < NLooseMuon; ++i) {
+     if( LooseMuon_Iso03[i] < 0.25){
+       N_VetoMuon++;
      }
-
-     h_NJet_S1->Fill( N_Jets, EventWeight);
-     h_NBJet_S1->Fill( N_BJets, EventWeight);
-
-     if ( N_BJets >= 1) {
-
-       h_NJet_S2->Fill( N_Jets, EventWeight);
-       h_NBJet_S2->Fill( N_BJets, EventWeight);
- 
-     }
-
    }
+
+   int N_VetoElectron = 0;
+
+   for (int i = 0; i < NLooseElectron; ++i) {
+     if( LooseElectron_Iso03[i] < 0.25){
+       N_VetoElectron++;
+     }
+   }
+
+   if( debug ) cout << "filling at step0..." << endl;
+
+   if(!IsMuonTrig) return kTRUE;
    //////////////////////////////
-   
+   //step 0 
+   if( NMuon > 0 ){
+     h_MuonIso[0]->Fill(Muon_Iso03[0], EventWeight);
+     h_NMuon[0]->Fill(N_IsoMuon, EventWeight);
+     h_NVertex[0]->Fill(NVertex, EventWeight);
+     h_WMuon_MT[0]->Fill( WMuon_MT[sel_mu], EventWeight);
+     h_WMuon_Phi[0]->Fill( WMuon_Phi[sel_mu], EventWeight);
+     h_NJet[0]->Fill(NJet, EventWeight);
+     h_NBJet[0]->Fill(NBJet, EventWeight);
+     h_MET[0]->Fill(MET, EventWeight);
+   }
+
+   if( debug ) cout << "filling at step1..." << endl;
+   if(N_IsoMuon == 1 && N_VetoElectron == 0 ){ //step 1
+  
+     h_MuonIso[1]->Fill(Muon_Iso03[sel_mu], EventWeight); 
+     h_NMuon[1]->Fill(N_IsoMuon, EventWeight);
+     h_NVertex[1]->Fill(NVertex, EventWeight);
+     h_WMuon_MT[1]->Fill( WMuon_MT[sel_mu], EventWeight);
+     h_WMuon_Phi[1]->Fill( WMuon_Phi[sel_mu], EventWeight);
+     h_NJet[1]->Fill(NJet, EventWeight);
+     h_NBJet[1]->Fill(NBJet, EventWeight); 
+     h_MET[1]->Fill(MET, EventWeight);
+      
+     if (N_IsoMuon > 1 ) h_Mmumu[1]->Fill((*muon1 + *muon2).M(), EventWeight);
+
+     if( debug ) cout << "filling at step2..." << endl;
+     if( NJet > 3){ //step 2
+       h_MuonIso[2]->Fill(Muon_Iso03[sel_mu], EventWeight); 
+       h_NMuon[2]->Fill(N_IsoMuon, EventWeight);
+       h_NVertex[2]->Fill(NVertex, EventWeight);
+       h_WMuon_MT[2]->Fill( WMuon_MT[sel_mu], EventWeight);
+       h_WMuon_Phi[2]->Fill( WMuon_Phi[sel_mu], EventWeight);
+       h_NJet[2]->Fill(NJet, EventWeight);
+       h_NBJet[2]->Fill(NBJet, EventWeight);
+       h_MET[2]->Fill(MET, EventWeight);
+
+       if( debug ) cout << "filling at step3..." << endl;
+
+       if( NBJet > 1 ){ //step 3
+         h_MuonIso[3]->Fill(Muon_Iso03[sel_mu], EventWeight); 
+         h_NMuon[3]->Fill(N_IsoMuon, EventWeight);
+         h_NVertex[3]->Fill(NVertex, EventWeight);
+         h_WMuon_MT[3]->Fill( WMuon_MT[sel_mu], EventWeight);
+         h_WMuon_Phi[3]->Fill( WMuon_Phi[sel_mu], EventWeight);
+         h_NJet[3]->Fill(NJet, EventWeight);
+         h_NBJet[3]->Fill(NBJet, EventWeight);
+         h_MET[3]->Fill(MET, EventWeight);
+
+       } 
+
+     }
+   }
+ 
+   if( debug ) cout << "ending event..." << endl; 
    return kTRUE;
 }
 
@@ -237,8 +298,6 @@ void MyAnalysis::SlaveTerminate() {
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
    // on each slave server.
-
-   // create histogram root files (Taejeong)
    TString option = GetOption();
 
    TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
@@ -247,8 +306,8 @@ void MyAnalysis::SlaveTerminate() {
      tmp->Write();
    }
    out->Write();
-   out->Close();  
- 
+   out->Close();
+   
 }
 
 void MyAnalysis::Terminate() {

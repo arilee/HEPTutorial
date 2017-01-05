@@ -20,6 +20,7 @@
 #include "MyMuon.h"
 #include "MyElectron.h"
 #include "MyPhoton.h"
+#include <iostream>
 
 using namespace std;
 
@@ -32,35 +33,59 @@ public:
    TTree *fChain; //!pointer to the analyzed TTree or TChain
    
    // Declaration of leaf types
+   Int_t IsMuonTrig;
+   Int_t NBJet;
    Int_t NJet;
-   Float_t Jet_Px[10]; //[NJet]
-   Float_t Jet_Py[10]; //[NJet]
-   Float_t Jet_Pz[10]; //[NJet]
+   Float_t Jet_Pt[10]; //[NJet]
+   Float_t Jet_Eta[10]; //[NJet]
+   Float_t Jet_Phi[10]; //[NJet]
    Float_t Jet_E[10]; //[NJet]
-   Float_t Jet_btag[10]; //[NJet]
+   Float_t Jet_bDiscriminator[10]; //[NJet]
    Float_t Jet_ID[10]; //[NJet]
    Int_t NMuon;
-   Float_t Muon_Px[5]; //[NMuon]
-   Float_t Muon_Py[5]; //[NMuon]
-   Float_t Muon_Pz[5]; //[NMuon]
+   Float_t Muon_Pt[5]; //[NMuon]
+   Float_t Muon_Eta[5]; //[NMuon]
+   Float_t Muon_Phi[5]; //[NMuon]
    Float_t Muon_E[5]; //[NMuon]
    Int_t Muon_Charge[5]; //[NMuon]
-   Float_t Muon_Iso[5]; //[NMuon]
+   Float_t Muon_Iso03[5]; //[NMuon]
+   Int_t NLooseMuon;
+   Float_t LooseMuon_Pt[5]; //[NLooseMuon]
+   Float_t LooseMuon_Eta[5]; //[NLooseMuon]
+   Float_t LooseMuon_Phi[5]; //[NLooseMuon]
+   Float_t LooseMuon_E[5]; //[NLooseMuon]
+   Int_t LooseMuon_Charge[5]; //[NLooseMuon]
+   Float_t LooseMuon_Iso03[5]; //[NLooseMuon]
    Int_t NElectron;
-   Float_t Electron_Px[5]; //[NElectron]
-   Float_t Electron_Py[5]; //[NElectron]
-   Float_t Electron_Pz[5]; //[NElectron]
+   Float_t Electron_Pt[5]; //[NElectron]
+   Float_t Electron_Eta[5]; //[NElectron]
+   Float_t Electron_Phi[5]; //[NElectron]
    Float_t Electron_E[5]; //[NElectron]
    Int_t Electron_Charge[5]; //[NElectron]
-   Float_t Electron_Iso[5]; //[NElectron]
+   Float_t Electron_Iso03[5]; //[NElectron]
+   Int_t NLooseElectron;
+   Float_t LooseElectron_Pt[5]; //[NLooseElectron]
+   Float_t LooseElectron_Eta[5]; //[NLooseElectron]
+   Float_t LooseElectron_Phi[5]; //[NLooseElectron]
+   Float_t LooseElectron_E[5]; //[NLooseElectron]
+   Int_t LooseElectron_Charge[5]; //[NLooseElectron]
+   Float_t LooseElectron_Iso03[5]; //[NLooseElectron]
+ 
    Int_t NPhoton;
-   Float_t Photon_Px[5]; //[NPhoton]
-   Float_t Photon_Py[5]; //[NPhoton]
-   Float_t Photon_Pz[5]; //[NPhoton]
+   Float_t Photon_Pt[5]; //[NPhoton]
+   Float_t Photon_Eta[5]; //[NPhoton]
+   Float_t Photon_Phi[5]; //[NPhoton]
    Float_t Photon_E[5]; //[NPhoton]
    Float_t Photon_Iso[5]; //[NPhoton]
-   Float_t MET_px;
-   Float_t MET_py;
+   Double_t MET;
+   Double_t MET_Px;
+   Double_t MET_Py;
+
+   Float_t WMuon_MT[5];
+   Float_t WMuon_Phi[5];
+   Float_t WElectron_MT[5];
+   Float_t WElectron_Phi[5];
+
    Float_t MChadronicBottom_px;
    Float_t MChadronicBottom_py;
    Float_t MChadronicBottom_pz;
@@ -81,67 +106,20 @@ public:
    Float_t MCneutrino_py;
    Float_t MCneutrino_pz;
    Int_t NPrimaryVertices;
-   Bool_t triggerIsoMu24;
-   Float_t EventWeight;
+   //Bool_t triggerIsoMu24;
+   Int_t NVertex;
+   Float_t PUWeight;
+   Float_t GenWeight;
    
-   // List of branches
-   TBranch *b_NJet; //!
-   TBranch *b_Jet_Px; //!
-   TBranch *b_Jet_Py; //!
-   TBranch *b_Jet_Pz; //!
-   TBranch *b_Jet_E; //!
-   TBranch *b_Jet_btag; //!
-   TBranch *b_Jet_ID; //!
-   TBranch *b_NMuon; //!
-   TBranch *b_Muon_Px; //!
-   TBranch *b_Muon_Py; //!
-   TBranch *b_Muon_Pz; //!
-   TBranch *b_Muon_E; //!
-   TBranch *b_Muon_Charge; //!
-   TBranch *b_Muon_Iso; //!
-   TBranch *b_NElectron; //!
-   TBranch *b_Electron_Px; //!
-   TBranch *b_Electron_Py; //!
-   TBranch *b_Electron_Pz; //!
-   TBranch *b_Electron_E; //!
-   TBranch *b_Electron_Charge; //!
-   TBranch *b_Electron_Iso; //!
-   TBranch *b_NPhoton; //!
-   TBranch *b_Photon_Px; //!
-   TBranch *b_Photon_Py; //!
-   TBranch *b_Photon_Pz; //!
-   TBranch *b_Photon_E; //!
-   TBranch *b_Photon_Iso; //!
-   TBranch *b_MET_px; //!
-   TBranch *b_MET_py; //!
-   TBranch *b_MChadronicBottom_px; //!
-   TBranch *b_MChadronicBottom_py; //!
-   TBranch *b_MChadronicBottom_pz; //!
-   TBranch *b_MCleptonicBottom_px; //!
-   TBranch *b_MCleptonicBottom_py; //!
-   TBranch *b_MCleptonicBottom_pz; //!
-   TBranch *b_MChadronicWDecayQuark_px; //!
-   TBranch *b_MChadronicWDecayQuark_py; //!
-   TBranch *b_MChadronicWDecayQuark_pz; //!
-   TBranch *b_MChadronicWDecayQuarkBar_px; //!
-   TBranch *b_MChadronicWDecayQuarkBar_py; //!
-   TBranch *b_MChadronicWDecayQuarkBar_pz; //!
-   TBranch *b_MClepton_px; //!
-   TBranch *b_MClepton_py; //!
-   TBranch *b_MClepton_pz; //!
-   TBranch *b_MCleptonPDGid; //!
-   TBranch *b_MCneutrino_px; //!
-   TBranch *b_MCneutrino_py; //!
-   TBranch *b_MCneutrino_pz; //!
-   TBranch *b_NPrimaryVertices; //!
-   TBranch *b_triggerIsoMu24; //!
-   TBranch *b_EventWeight; //!
-   
-   MyAnalysis(float sf = 1., float wf = 1, TTree * /*tree*/= 0) :
+   MyAnalysis(float sf = 1., float wf = 1, float Xsection = 1.0 , float lumi = 1.0, TTree * /*tree*/= 0) :
+
    fChain(0) {
       weight_factor = wf;
+      Lumi = lumi;
+      Sigma = Xsection; 
       SF_b = sf;
    }
+
    virtual ~MyAnalysis() {
    }
    virtual Int_t Version() const {
@@ -171,26 +149,35 @@ public:
    virtual void Terminate();
    
    void BuildEvent();
-   
+  
+   float EventWeight; 
    int TotalEvents;
+   int nEvents; 
+   float Lumi;
+   float Sigma; 
+
    vector<MyJet> Jets;
    vector<MyMuon> Muons;
    vector<MyElectron> Electrons;
    vector<MyPhoton> Photons;
    
    TLorentzVector hadB, lepB, hadWq, hadWqb, lepWl, lepWn;
-   TLorentzVector met;
+   TLorentzVector mymet;
    
    float weight_factor;
+   float norm_scale;
    float SF_b;
-   
-   TH1F *h_Mmumu;
-   TH1F *h_NMuon;
-   TH1F *h_NJet_S1;
-   TH1F *h_NBJet_S1;
-   TH1F *h_NJet_S2;
-   TH1F *h_NBJet_S2;
-   
+  
+   TH1F *h_Mmumu[4];
+   TH1F *h_NMuon[4];
+   TH1F *h_MuonIso[4];
+   TH1F *h_NVertex[4];
+   TH1F *h_WMuon_MT[4];
+   TH1F *h_WMuon_Phi[4];
+   TH1F *h_NJet[4]; 
+   TH1F *h_NBJet[4]; 
+   TH1F *h_MET[4]; 
+ 
    vector<TH1F*> histograms;
    vector<TH1F*> histograms_MC;
    
@@ -214,59 +201,69 @@ void MyAnalysis::Init(TTree *tree)
    fChain = tree;
    fChain->SetMakeClass(1);
    
-   fChain->SetBranchAddress("NJet", &NJet, &b_NJet);
-   fChain->SetBranchAddress("Jet_Px", Jet_Px, &b_Jet_Px);
-   fChain->SetBranchAddress("Jet_Py", Jet_Py, &b_Jet_Py);
-   fChain->SetBranchAddress("Jet_Pz", Jet_Pz, &b_Jet_Pz);
-   fChain->SetBranchAddress("Jet_E", Jet_E, &b_Jet_E);
-   fChain->SetBranchAddress("Jet_btag", Jet_btag, &b_Jet_btag);
-   fChain->SetBranchAddress("Jet_ID", Jet_ID, &b_Jet_ID);
-   fChain->SetBranchAddress("NMuon", &NMuon, &b_NMuon);
-   fChain->SetBranchAddress("Muon_Px", Muon_Px, &b_Muon_Px);
-   fChain->SetBranchAddress("Muon_Py", Muon_Py, &b_Muon_Py);
-   fChain->SetBranchAddress("Muon_Pz", Muon_Pz, &b_Muon_Pz);
-   fChain->SetBranchAddress("Muon_E", Muon_E, &b_Muon_E);
-   fChain->SetBranchAddress("Muon_Charge", Muon_Charge, &b_Muon_Charge);
-   fChain->SetBranchAddress("Muon_Iso", Muon_Iso, &b_Muon_Iso);
-   fChain->SetBranchAddress("NElectron", &NElectron, &b_NElectron);
-   fChain->SetBranchAddress("Electron_Px", Electron_Px, &b_Electron_Px);
-   fChain->SetBranchAddress("Electron_Py", Electron_Py, &b_Electron_Py);
-   fChain->SetBranchAddress("Electron_Pz", Electron_Pz, &b_Electron_Pz);
-   fChain->SetBranchAddress("Electron_E", Electron_E, &b_Electron_E);
-   fChain->SetBranchAddress("Electron_Charge", Electron_Charge, &b_Electron_Charge);
-   fChain->SetBranchAddress("Electron_Iso", Electron_Iso, &b_Electron_Iso);
-   fChain->SetBranchAddress("NPhoton", &NPhoton, &b_NPhoton);
-   fChain->SetBranchAddress("Photon_Px", Photon_Px, &b_Photon_Px);
-   fChain->SetBranchAddress("Photon_Py", Photon_Py, &b_Photon_Py);
-   fChain->SetBranchAddress("Photon_Pz", Photon_Pz, &b_Photon_Pz);
-   fChain->SetBranchAddress("Photon_E", Photon_E, &b_Photon_E);
-   fChain->SetBranchAddress("Photon_Iso", Photon_Iso, &b_Photon_Iso);
-   fChain->SetBranchAddress("MET_px", &MET_px, &b_MET_px);
-   fChain->SetBranchAddress("MET_py", &MET_py, &b_MET_py);
-   fChain->SetBranchAddress("MChadronicBottom_px", &MChadronicBottom_px, &b_MChadronicBottom_px);
-   fChain->SetBranchAddress("MChadronicBottom_py", &MChadronicBottom_py, &b_MChadronicBottom_py);
-   fChain->SetBranchAddress("MChadronicBottom_pz", &MChadronicBottom_pz, &b_MChadronicBottom_pz);
-   fChain->SetBranchAddress("MCleptonicBottom_px", &MCleptonicBottom_px, &b_MCleptonicBottom_px);
-   fChain->SetBranchAddress("MCleptonicBottom_py", &MCleptonicBottom_py, &b_MCleptonicBottom_py);
-   fChain->SetBranchAddress("MCleptonicBottom_pz", &MCleptonicBottom_pz, &b_MCleptonicBottom_pz);
-   fChain->SetBranchAddress("MChadronicWDecayQuark_px", &MChadronicWDecayQuark_px, &b_MChadronicWDecayQuark_px);
-   fChain->SetBranchAddress("MChadronicWDecayQuark_py", &MChadronicWDecayQuark_py, &b_MChadronicWDecayQuark_py);
-   fChain->SetBranchAddress("MChadronicWDecayQuark_pz", &MChadronicWDecayQuark_pz, &b_MChadronicWDecayQuark_pz);
-   fChain->SetBranchAddress("MChadronicWDecayQuarkBar_px", &MChadronicWDecayQuarkBar_px, &b_MChadronicWDecayQuarkBar_px);
-   fChain->SetBranchAddress("MChadronicWDecayQuarkBar_py", &MChadronicWDecayQuarkBar_py, &b_MChadronicWDecayQuarkBar_py);
-   fChain->SetBranchAddress("MChadronicWDecayQuarkBar_pz", &MChadronicWDecayQuarkBar_pz, &b_MChadronicWDecayQuarkBar_pz);
-   fChain->SetBranchAddress("MClepton_px", &MClepton_px, &b_MClepton_px);
-   fChain->SetBranchAddress("MClepton_py", &MClepton_py, &b_MClepton_py);
-   fChain->SetBranchAddress("MClepton_pz", &MClepton_pz, &b_MClepton_pz);
-   fChain->SetBranchAddress("MCleptonPDGid", &MCleptonPDGid, &b_MCleptonPDGid);
-   fChain->SetBranchAddress("MCneutrino_px", &MCneutrino_px, &b_MCneutrino_px);
-   fChain->SetBranchAddress("MCneutrino_py", &MCneutrino_py, &b_MCneutrino_py);
-   fChain->SetBranchAddress("MCneutrino_pz", &MCneutrino_pz, &b_MCneutrino_pz);
-   fChain->SetBranchAddress("NPrimaryVertices", &NPrimaryVertices, &b_NPrimaryVertices);
-   fChain->SetBranchAddress("triggerIsoMu24", &triggerIsoMu24, &b_triggerIsoMu24);
-   fChain->SetBranchAddress("EventWeight", &EventWeight, &b_EventWeight);
-   
+   fChain->SetBranchAddress("IsMuonTrig", &IsMuonTrig);
+   fChain->SetBranchAddress("NBJet", &NBJet);
+   fChain->SetBranchAddress("NJet", &NJet);
+   fChain->SetBranchAddress("Jet_Pt", Jet_Pt);
+   fChain->SetBranchAddress("Jet_Eta", Jet_Eta);
+   fChain->SetBranchAddress("Jet_Phi", Jet_Phi);
+   fChain->SetBranchAddress("Jet_E", Jet_E);
+   fChain->SetBranchAddress("Jet_bDiscriminator", Jet_bDiscriminator);
+
+   fChain->SetBranchAddress("NMuon", &NMuon);
+   fChain->SetBranchAddress("Muon_Pt", Muon_Pt);
+   fChain->SetBranchAddress("Muon_Eta", Muon_Eta);
+   fChain->SetBranchAddress("Muon_Phi", Muon_Phi);
+   fChain->SetBranchAddress("Muon_E", Muon_E);
+   fChain->SetBranchAddress("Muon_Charge", Muon_Charge);
+   fChain->SetBranchAddress("Muon_Iso03", Muon_Iso03);
+
+
+   fChain->SetBranchAddress("NLooseMuon", &NLooseMuon);
+   fChain->SetBranchAddress("LooseMuon_Pt", LooseMuon_Pt);
+   fChain->SetBranchAddress("LooseMuon_Eta", LooseMuon_Eta);
+   fChain->SetBranchAddress("LooseMuon_Phi", LooseMuon_Phi);
+   fChain->SetBranchAddress("LooseMuon_E", LooseMuon_E);
+   fChain->SetBranchAddress("LooseMuon_Charge", LooseMuon_Charge);
+   fChain->SetBranchAddress("LooseMuon_Iso03", LooseMuon_Iso03);
+
+   fChain->SetBranchAddress("NElectron", &NElectron);
+   fChain->SetBranchAddress("Electron_Pt", Electron_Pt);
+   fChain->SetBranchAddress("Electron_Eta", Electron_Eta);
+   fChain->SetBranchAddress("Electron_Phi", Electron_Phi);
+   fChain->SetBranchAddress("Electron_E", Electron_E);
+   fChain->SetBranchAddress("Electron_Charge", Electron_Charge);
+   fChain->SetBranchAddress("Electron_Iso03", Electron_Iso03);
+   fChain->SetBranchAddress("NLooseElectron", &NLooseElectron);
+   fChain->SetBranchAddress("LooseElectron_Pt", LooseElectron_Pt);
+   fChain->SetBranchAddress("LooseElectron_Eta", LooseElectron_Eta);
+   fChain->SetBranchAddress("LooseElectron_Phi", LooseElectron_Phi);
+   fChain->SetBranchAddress("LooseElectron_E", LooseElectron_E);
+   fChain->SetBranchAddress("LooseElectron_Charge", LooseElectron_Charge);
+   fChain->SetBranchAddress("LooseElectron_Iso03", LooseElectron_Iso03);
+
+   fChain->SetBranchAddress("MET", &MET);
+   fChain->SetBranchAddress("MET_Px", &MET_Px);
+   fChain->SetBranchAddress("MET_Py", &MET_Py);
+
+   fChain->SetBranchAddress("WMuon_MT", &WMuon_MT);
+   fChain->SetBranchAddress("WMuon_Phi", &WMuon_Phi);
+   fChain->SetBranchAddress("WElectron_MT", &WElectron_MT);
+   fChain->SetBranchAddress("WElectron_Phi", &WElectron_Phi);
+
+   fChain->SetBranchAddress("NVertex", &NVertex);
+   fChain->SetBranchAddress("PUWeight", &PUWeight);
+   fChain->SetBranchAddress("GenWeight", &GenWeight);
+  
+   TFile * f = ((TChain *) fChain)->GetFile();
+   //const char * name = ((TChain *) fChain)->GetFile()->GetName();
+   //cout << "name = " << name << endl;
+   TH1F * hevt = (TH1F*) f->Get("TopTree/EventSummary");
+   nEvents = hevt->GetBinContent(2);
+ 
    TotalEvents = 0;
+   EventWeight = 1.0;
+
 }
 
 Bool_t MyAnalysis::Notify()

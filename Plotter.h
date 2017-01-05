@@ -25,22 +25,21 @@
 class Plotter {
 public:
 	Plotter();
-        Plotter(float l){
-          useLumi = true;
+	virtual ~Plotter();
+        void SetLumi(float l){
           luminosity = l;
         }
-	virtual ~Plotter();
-	void SetData(std::vector<TH1F*> v, std::string n){//, float l = 1.0){
+	void SetData(std::vector<TH1F*> v, std::string n){
 		data.push_back(v);
 		data_names.push_back(n);
 		N_histos = v.size();
 	}
-        void SetData(TString name, std::string n){//, float l = 1.0){
+        void SetData(TString name, std::string n){
                TFile * f = new TFile(Form("%s",name.Data()));
                std::vector<TH1F*> v;
-               int nkeys = f->GetNkeys();
-               for( int i = 0; i < nkeys ; i++){
-                 TKey *key=(TKey*)f->GetListOfKeys()->At(i);
+               TIter next(f->GetListOfKeys()); 
+               TKey *key;
+               while (key = (TKey*)next() ){
                  TClass *cl = gROOT->GetClass(key->GetClassName());
                  if ( cl->InheritsFrom("TH1F")) {
                    TH1F * h = (TH1F*) key->ReadObj(); 
@@ -51,23 +50,23 @@ public:
                data_names.push_back(n);
                N_histos = v.size();
         }
+
 	void ClearData(){
 		data.clear();
 		data_names.clear();
 	}
-	void AddBg(std::vector<TH1F*> v, std::string n, float x = 1.0, float bkgn = 1.0){
-                bg.push_back(v);
-                bg_names.push_back(n);
-                N_histos = v.size();
+	void AddBg(std::vector<TH1F*> v, std::string n, float x = 1.0){
+		bg.push_back(v);
+		bg_names.push_back(n);
+		N_histos = v.size();
                 bg_X.push_back(x);
-                bg_N.push_back(bkgn);
 	}
-        void AddBg(TString name, std::string n, float x = 1.0, float bkgn = 1.0){
+        void AddBg(TString name, std::string n, float x = 1.0){
                 TFile * f = new TFile(Form("%s",name.Data()));
                 std::vector<TH1F*> v;
-                int nkeys = f->GetNkeys();
-                for( int i = 0; i < nkeys ; i++){
-                  TKey *key=(TKey*)f->GetListOfKeys()->At(i);
+                TIter next(f->GetListOfKeys());             
+                TKey *key;
+                while (key = (TKey*)next() ){
                   TClass *cl = gROOT->GetClass(key->GetClassName());
                   if ( cl->InheritsFrom("TH1F")) {
                     TH1F * h = (TH1F*) key->ReadObj();
@@ -78,8 +77,8 @@ public:
                 bg_names.push_back(n);
                 N_histos = v.size();
                 bg_X.push_back(x);
-                bg_N.push_back(bkgn);
         }
+
 	void ClearBg(){
 		bg.clear();
 		bg_names.clear();
@@ -90,6 +89,24 @@ public:
 		N_histos = v.size();
                 signal_X.push_back(x);
 	}
+        void AddSig(TString name, std::string n, float x = 1.0){
+                TFile * f = new TFile(Form("%s",name.Data()));
+                std::vector<TH1F*> v;
+                TIter next(f->GetListOfKeys());             
+                TKey *key;
+                while (key = (TKey*)next() ){
+                  TClass *cl = gROOT->GetClass(key->GetClassName());
+                  if ( cl->InheritsFrom("TH1F")) {
+                    TH1F * h = (TH1F*) key->ReadObj();
+                    v.push_back(h);
+                  }
+                }
+                signal.push_back(v);
+                signal_names.push_back(n);
+                N_histos = v.size();
+                signal_X.push_back(x);
+        }
+
 	void ClearSig(){
 		signal.clear();
 		signal_names.clear();
@@ -101,18 +118,15 @@ private:
 	std::vector < std::vector<TH1F*> > bg;
 	std::vector < std::vector<TH1F*> > signal;
 
+        std::vector < float > bg_X;
+        std::vector < float > signal_X;
+
 	std::vector < std::string > data_names;
 	std::vector < std::string > bg_names;
 	std::vector < std::string > signal_names;
- 
-        std::vector < float > bg_X; 
-        std::vector < float > bg_N; 
-        std::vector < float > signal_X;
 
 	int N_histos;
- 
-        bool useLumi; 
-        float luminosity; 
+        float luminosity;
 
 };
 
