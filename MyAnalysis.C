@@ -60,6 +60,28 @@ void MyAnalysis::BuildEvent() {
       MyJet jet(Jet_Pt[i], Jet_Eta[i], Jet_Phi[i], Jet_E[i]);
       jet.SetBTagDiscriminator(Jet_bDiscriminator[i]);
       //jet.SetJetID(Jet_ID[i]);
+      //jet cleaning 
+      
+      bool overlap = false;
+
+      for(int j = 0 ; j < Electrons.size() ; j ++){
+        double dr = jet.DeltaR(Electrons[j]);
+        if( dr < 0.5 ){
+          overlap = true;
+          break;
+        }
+      }
+      if( overlap ) continue;
+
+      for(int j = 0 ; j < Muons.size() ; j ++){
+        double dr = jet.DeltaR(Muons[j]);
+        if( dr < 0.5 ){
+          overlap = true;
+          break;
+        }
+      }
+      if( overlap ) continue;
+
       Jets.push_back(jet);
    }
    

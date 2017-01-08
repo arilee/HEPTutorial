@@ -55,13 +55,14 @@ public:
 		data.clear();
 		data_names.clear();
 	}
-	void AddBg(std::vector<TH1F*> v, std::string n, float x = 1.0){
+	void AddBg(std::vector<TH1F*> v, std::string n, Color_t color, float x = 1.0){
 		bg.push_back(v);
 		bg_names.push_back(n);
 		N_histos = v.size();
                 bg_X.push_back(x);
+                bg_color.push_back(color);
 	}
-        void AddBg(TString name, std::string n, float x = 1.0){
+        void AddBg(TString name, std::string n, Color_t color, float x = 1.0){
                 TFile * f = new TFile(Form("%s",name.Data()));
                 std::vector<TH1F*> v;
                 TIter next(f->GetListOfKeys());             
@@ -77,19 +78,21 @@ public:
                 bg_names.push_back(n);
                 N_histos = v.size();
                 bg_X.push_back(x);
+                bg_color.push_back(color);
         }
 
 	void ClearBg(){
 		bg.clear();
 		bg_names.clear();
 	}
-	void AddSig(std::vector<TH1F*> v, std::string n, float x = 1.0){
+	void AddSig(std::vector<TH1F*> v, std::string n, Color_t color, float x = 1.0){
 		signal.push_back(v);
 		signal_names.push_back(n);
 		N_histos = v.size();
                 signal_X.push_back(x);
+                signal_color.push_back(color);
 	}
-        void AddSig(TString name, std::string n, float x = 1.0){
+        void AddSig(TString name, std::string n, Color_t color, float x = 1.0){
                 TFile * f = new TFile(Form("%s",name.Data()));
                 std::vector<TH1F*> v;
                 TIter next(f->GetListOfKeys());             
@@ -105,6 +108,7 @@ public:
                 signal_names.push_back(n);
                 N_histos = v.size();
                 signal_X.push_back(x);
+                signal_color.push_back(color);
         }
 
 	void ClearSig(){
@@ -120,6 +124,9 @@ private:
 
         std::vector < float > bg_X;
         std::vector < float > signal_X;
+
+        std::vector < Color_t > bg_color;
+        std::vector < Color_t > signal_color;
 
 	std::vector < std::string > data_names;
 	std::vector < std::string > bg_names;

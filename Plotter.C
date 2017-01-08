@@ -69,7 +69,7 @@ void Plotter::Plot(std::string filename) {
           int Nset = data.size() + bg.size() + signal.size();
           if (Nset > 20)
             Nset = 20.;
-          l = new TLegend(0.76, 0.90 - 0.8 * Nset / 20., 1.0, 0.95);
+          l = new TLegend(0.76, 0.90 - 0.8 * Nset / 20., 0.9, 0.95);
           l->SetTextSize(0.04);
           l->SetFillColor(0);
           l->SetLineColor(0);
@@ -78,43 +78,14 @@ void Plotter::Plot(std::string filename) {
 	    hs = new THStack("hs", bg.at(0).at(i)->GetName());
 	    int j = 0;
             for (std::vector<std::vector<TH1F*> >::const_iterator it = bg.begin(); it != bg.end(); ++it) {
-              switch (j) {
-                case 0:
-                  it->at(i)->SetFillColor(kRed);
-                  break;
-                case 1:
-                  it->at(i)->SetFillColor(kOrange);
-                  break;
-                case 2:
-                  it->at(i)->SetFillColor(kYellow);
-                  break;
-                case 3:
-                  it->at(i)->SetFillColor(kGreen);
-                  break;
-                case 4:
-                  it->at(i)->SetFillColor(kCyan);
-                  break;
-                case 5:
-                  it->at(i)->SetFillColor(kBlue);
-                  break;
-                case 6:
-                  it->at(i)->SetFillColor(kMagenta);
-                  break;
-                case 7:
-                  it->at(i)->SetFillColor(kGray);
-                  break;
-                case 8:
-                  it->at(i)->SetFillColor(kGray + 2);
-                  break;
-                default:
-                  it->at(i)->SetFillColor(kBlack);
-                  break;
-              }
+
+              it->at(i)->SetFillColor(bg_color.at(j));
 
               float scale = luminosity/bg_X.at(j);
               it->at(i)->Scale( scale );
-              hs->Add(it->at(i));
+
               l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
+              hs->Add(it->at(i));
               ++j;
             }
           }

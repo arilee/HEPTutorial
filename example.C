@@ -7,13 +7,13 @@
 
 int main() {
    
-   float lumi = 36000.;
+   float lumi = 36500.;
    
    TString dir = "/data/users/jhgoh/hep2016/v803_1";
 
    int nevt = -1;
 
-   bool run = true;
+   bool run = false;
 
    if( run ) {
 
@@ -67,14 +67,14 @@ int main() {
    Plotter P;
    P.SetLumi(36500);
    P.SetData("hist_data.root", std::string("Data"));
-   P.AddBg("hist_TT_powheg.root", std::string("t#bar{t}"), lumi) ;//831.8);
-   P.AddBg("hist_WJets.root", std::string("W #rightarrow l#nu"), lumi); //61524);
-   P.AddBg("hist_DYJets.root", std::string("Z/#gamma* #rightarrow ll"), lumi); //6025.2);
-   P.AddBg("hist_DYJets_10to50.root", std::string("Z/#gamma* #rightarrow ll (10-50)"), lumi); //18610.0);
-   P.AddBg("hist_SingleTop_t.root", std::string("Single Top_t"), lumi); //44.33);
-   P.AddBg("hist_SingleTbar_t.root", std::string("single Tbar-t"), lumi); //26.38);
-   P.AddBg("hist_SingleTop_tW.root", std::string("single Top-tW"), lumi); //35.6);
-   P.AddBg("hist_SingleTbar_tW.root", std::string("single Tbar-tW"), lumi); //35.6);
+   P.AddBg("hist_TT_powheg.root", std::string("t#bar{t}"), 2, lumi) ;//831.8);
+   P.AddBg("hist_WJets.root", std::string("WJets" ), 5, lumi); //61524);
+   P.AddBg("hist_DYJets.root", std::string("DYJets"), 4, lumi); //6025.2);
+   P.AddBg("hist_DYJets_10to50.root", std::string("DYJets (10-50)"), 4, lumi); //18610.0);
+   P.AddBg("hist_SingleTop_t.root", std::string("Single t"), 6, lumi); //44.33);
+   P.AddBg("hist_SingleTbar_t.root", std::string("Single #bar{t}"), 6, lumi); //26.38);
+   P.AddBg("hist_SingleTop_tW.root", std::string("Single tW"), 6), lumi; //35.6);
+   P.AddBg("hist_SingleTbar_tW.root", std::string("Single #bar{t}W"), 6, lumi); //35.6);
    P.Plot("results.pdf");
 
 }
