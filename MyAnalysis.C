@@ -117,17 +117,17 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    TString option = GetOption();
 
    for(int i=0; i < 4; i++){ 
-     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 40 , 0, 40);
+     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 50 , 0, 50);
      h_NVertex[i]->SetXTitle("No. Vertexs");
      h_NVertex[i]->Sumw2();
      histograms.push_back(h_NVertex[i]);
      histograms_MC.push_back(h_NVertex[i]);
     
-     h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i_%s",i,option.Data()), "Invariant di-muon mass", 100, 40, 140);
-     h_Mmumu[i]->SetXTitle("m_{#mu#mu}");
-     h_Mmumu[i]->Sumw2();
-     histograms.push_back(h_Mmumu[i]);
-     histograms_MC.push_back(h_Mmumu[i]);
+     //h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i_%s",i,option.Data()), "Di-muon mass", 100, 40, 140);
+     //h_Mmumu[i]->SetXTitle("Di-muon mass");
+     //h_Mmumu[i]->Sumw2();
+     //histograms.push_back(h_Mmumu[i]);
+     //histograms_MC.push_back(h_Mmumu[i]);
    
      h_NMuon[i] = new TH1F(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
      h_NMuon[i]->SetXTitle("Muon Multiplicity");
@@ -136,7 +136,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
      histograms_MC.push_back(h_NMuon[i]);
  
      h_MuonIso[i] = new TH1F(Form("h_MuonIso_S%i_%s",i,option.Data()), "Relative Isolation", 80, 0, 0.4);
-     h_MuonIso[i]->SetXTitle("Relative Isolation (GeV)");
+     h_MuonIso[i]->SetXTitle("Relative Isolation");
      h_MuonIso[i]->Sumw2();
      histograms.push_back(h_MuonIso[i]);
      histograms_MC.push_back(h_MuonIso[i]);
@@ -165,7 +165,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
      histograms.push_back(h_NBJet[i]);
      histograms_MC.push_back(h_NBJet[i]);
 
-     h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 100, 0, 100);
+     h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 10, 0, 100);
      h_MET[i]->SetXTitle("MET");
      h_MET[i]->Sumw2();
      histograms.push_back(h_MET[i]);
@@ -199,7 +199,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
    
    GetEntry(entry);
 
-   if (TotalEvents % 10000 == 0)
+   if (TotalEvents % 100000 == 0)
       cout << "Next event -----> " << TotalEvents << endl;
    
    BuildEvent();
@@ -256,7 +256,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
 
    if( debug ) cout << "filling at step0..." << endl;
 
-   if(!IsMuonTrig) return kTRUE;
+   //if(!IsMuonTrig) return kTRUE;
    //////////////////////////////
    //step 0 
    if( NMuon > 0 ){
@@ -282,7 +282,7 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      h_NBJet[1]->Fill(NBJet, EventWeight); 
      h_MET[1]->Fill(MET, EventWeight);
       
-     if (N_IsoMuon > 1 ) h_Mmumu[1]->Fill((*muon1 + *muon2).M(), EventWeight);
+     //if (N_IsoMuon > 1 ) h_Mmumu[1]->Fill((*muon1 + *muon2).M(), EventWeight);
 
      if( debug ) cout << "filling at step2..." << endl;
      if( NJet > 3){ //step 2

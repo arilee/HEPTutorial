@@ -13,7 +13,7 @@ int main() {
 
    int nevt = -1;
 
-   bool run = false;
+   bool run = true;
 
    if( run ) {
 
@@ -61,6 +61,16 @@ int main() {
    TChain* ch9 = new TChain("TopTree/events");
    ch9->Add(Form("%s/hep_SingleTbar_tW.root",dir.Data()),nevt);
    ch9->Process(L,"SingleTbar_tW");
+ 
+   MyAnalysis *S1 = new MyAnalysis(1,1,1.5,lumi);
+   TChain* ch_s1 = new TChain("TopTree/events");
+   ch_s1->Add(Form("%s/hep_TT_TopLeptonicDecay_TH_1L3B_Eta_Hct.root",dir.Data()),nevt);
+   ch_s1->Process(S1,"TT_TopLeptonicDecay_TH_1L3B_Eta_Hct");
+
+   MyAnalysis *S2 = new MyAnalysis(1,1,1.5,lumi);
+   TChain* ch_s2 = new TChain("TopTree/events");
+   ch_s2->Add(Form("%s/hep_TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hct.root",dir.Data()),nevt);
+   ch_s2->Process(S2,"TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hct");
 
    }
 
@@ -70,11 +80,13 @@ int main() {
    P.AddBg("hist_TT_powheg.root", std::string("t#bar{t}"), 2, lumi) ;//831.8);
    P.AddBg("hist_WJets.root", std::string("WJets" ), 5, lumi); //61524);
    P.AddBg("hist_DYJets.root", std::string("DYJets"), 4, lumi); //6025.2);
-   P.AddBg("hist_DYJets_10to50.root", std::string("DYJets (10-50)"), 4, lumi); //18610.0);
+   P.AddBg("hist_DYJets_10to50.root", std::string("DYJets"), 4, lumi); //18610.0);
    P.AddBg("hist_SingleTop_t.root", std::string("Single t"), 6, lumi); //44.33);
-   P.AddBg("hist_SingleTbar_t.root", std::string("Single #bar{t}"), 6, lumi); //26.38);
-   P.AddBg("hist_SingleTop_tW.root", std::string("Single tW"), 6), lumi; //35.6);
-   P.AddBg("hist_SingleTbar_tW.root", std::string("Single #bar{t}W"), 6, lumi); //35.6);
+   P.AddBg("hist_SingleTbar_t.root", std::string("Single t"), 6, lumi); //26.38);
+   P.AddBg("hist_SingleTop_tW.root", std::string("Single t"), 6, lumi); //35.6);
+   P.AddBg("hist_SingleTbar_tW.root", std::string("Single t"), 6, lumi); //35.6);
+   P.AddSig("hist_TT_TopLeptonicDecay_TH_1L3B_Eta_Hct.root", std::string("Signal Hct"), kBlue-4, lumi); //35.6);
+   P.AddSig("hist_TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hct.root", std::string("Signal Hct"), kBlue-4, lumi); //35.6);
    P.Plot("results.pdf");
 
 }

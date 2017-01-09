@@ -66,28 +66,54 @@ void Plotter::Plot(std::string filename) {
       
           THStack *hs;
           TLegend *l;
+          TH1F *h_signal; 
+
           int Nset = data.size() + bg.size() + signal.size();
           if (Nset > 20)
             Nset = 20.;
-          l = new TLegend(0.76, 0.90 - 0.8 * Nset / 20., 0.9, 0.95);
+          l = new TLegend(0.76, 0.90 - 0.8 * Nset / 20., 0.95, 0.95);
           l->SetTextSize(0.04);
           l->SetFillColor(0);
           l->SetLineColor(0);
 
           if (bg.size() > 0) {
 	    hs = new THStack("hs", bg.at(0).at(i)->GetName());
-	    int j = 0;
-            for (std::vector<std::vector<TH1F*> >::const_iterator it = bg.begin(); it != bg.end(); ++it) {
 
-              it->at(i)->SetFillColor(bg_color.at(j));
+            for (int j = 0 ; j < bg.size() ; j++) {
+
+              bg.at(j).at(i)->SetFillColor(bg_color.at(j));
 
               float scale = luminosity/bg_X.at(j);
-              it->at(i)->Scale( scale );
+              bg.at(j).at(i)->Scale( scale );
 
-              l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
-              hs->Add(it->at(i));
-              ++j;
+              hs->Add(bg.at(j).at(i));
+              
+              //Add Entry in the legend only for the last one when the names are the same. 
+              //check with next background if the name is the same.  
+              if( (j < bg.size()-1) && bg_names.at(j) == bg_names.at(j+1) ) { 
+                bg.at(j).at(i)->SetLineColor(bg_color.at(j));
+                continue;
+              }
+              l->AddEntry(bg.at(j).at(i), bg_names.at(j).c_str(), "f");
             }
+          }
+
+          if (signal.size() > 0 ){
+            for (int j = 0 ; j < signal.size(); j++){
+              signal.at(j).at(i)->SetLineColor(signal_color.at(j)); 
+              signal.at(j).at(i)->SetLineStyle(2); 
+              float scale = luminosity/signal_X.at(j);
+              signal.at(j).at(i)->Scale( scale );
+
+              if( j == 0 ) h_signal = signal.at(j).at(i);
+              else h_signal->Add(signal.at(j).at(i));
+
+              if( (j < signal.size()-1) && signal_names.at(j) == signal_names.at(j+1) ) {
+                continue;
+              }
+              l->AddEntry(signal.at(j).at(i), signal_names.at(j).c_str(), "L");
+
+            } 
           }
 
           TCanvas *c = new TCanvas(Form("c_%i",i), "c", 800, 600);
@@ -106,7 +132,9 @@ void Plotter::Plot(std::string filename) {
             
             if (bg.size() > 0)
               hs->Draw("histsame");
-            
+            if (signal.size() > 0) 
+              h_signal->Draw("histsame");
+  
             data.at(0).at(i)->SetMarkerStyle(20);
             data.at(0).at(i)->Draw("psame");
             l->Draw("same");
@@ -121,7 +149,8 @@ void Plotter::Plot(std::string filename) {
            
            hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
            hs->GetYaxis()->SetTitle("Events");
-         
+           if (signal.size() > 0)
+              h_signal->Draw("histsame");         
            l->Draw("same");
          }
 
