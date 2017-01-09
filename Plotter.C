@@ -154,6 +154,20 @@ void Plotter::Plot(std::string filename) {
            l->Draw("same");
          }
 
+         
+         TPaveText *label = new TPaveText();
+         label->SetX1NDC(gStyle->GetPadLeftMargin());
+         label->SetY1NDC(1.0-gStyle->GetPadTopMargin());
+         label->SetX2NDC(1.0-gStyle->GetPadRightMargin());
+         label->SetY2NDC(1.0);
+         label->SetTextFont(42);
+         label->AddText(Form("CMS, %3.1f fb^{-1} at #sqrt{s} = 13 TeV",luminosity/1000));
+         label->SetFillStyle(0);
+         label->SetBorderSize(0);
+         label->SetTextSize(0.04);
+         label->SetTextAlign(32);
+         label->Draw("same");
+
          c->Print((plotname+std::string(".pdf")).c_str());
          if (i == 0 && N_histos > 1) {
            c->Print((filename+std::string("(")).c_str());

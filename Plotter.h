@@ -21,6 +21,8 @@
 #include <TROOT.h>
 #include <TKey.h>
 #include <TClass.h>
+#include <TLatex.h>
+#include <TPaveText.h>
 
 class Plotter {
 public:
