@@ -9,17 +9,23 @@ int main() {
    
    float lumi = 36500.;
    
-   TString dir = "/data/users/jhgoh/hep2016/v803_1";
+   TString dir = "/data/users/jhgoh/hep2016/v803_2";
 
    int nevt = -1;
 
    bool run = true;
 
    if( run ) {
-
    MyAnalysis *A = new MyAnalysis();
    TChain* ch = new TChain("TopTree/events");
-   ch->Add(Form("%s/hep_SingleMuon_Run2016.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016B.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016C.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016D.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016E.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016F.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016G.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016H_v2.root",dir.Data()), nevt);
+   ch->Add(Form("%s/hep_SingleMuon_Run2016H_v3.root",dir.Data()), nevt);
    ch->Process(A,"data");
 
    MyAnalysis *B = new MyAnalysis(1,1,831.8,lumi);
